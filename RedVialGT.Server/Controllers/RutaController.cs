@@ -74,7 +74,7 @@ namespace RedVialGT.Server.Controllers
                         Departamento = new DepartamentoDTO
                         {
                             IdDepartamento = item.IdDepartamentoPartidaNavigation.IdDepartamento,
-                            NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento
+                            NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento,
                         }
                     });
                 }
