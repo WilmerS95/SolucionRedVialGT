@@ -1,0 +1,6 @@
+@RedVialGT.Server_HostAddress = http://localhost:5150
+
+GET {{RedVialGT.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

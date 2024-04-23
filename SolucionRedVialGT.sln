@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedVialGT.Server", "RedVialGT.Server\RedVialGT.Server.csproj", "{8CEA6E22-490B-4377-B0AB-C99271525761}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedVialGT.Shared", "RedVialGT.Shared\RedVialGT.Shared.csproj", "{6D49D5BC-04D6-440C-BFFF-CA5CD82E3D7E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8CEA6E22-490B-4377-B0AB-C99271525761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CEA6E22-490B-4377-B0AB-C99271525761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CEA6E22-490B-4377-B0AB-C99271525761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CEA6E22-490B-4377-B0AB-C99271525761}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D49D5BC-04D6-440C-BFFF-CA5CD82E3D7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D49D5BC-04D6-440C-BFFF-CA5CD82E3D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D49D5BC-04D6-440C-BFFF-CA5CD82E3D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D49D5BC-04D6-440C-BFFF-CA5CD82E3D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A576C26F-2A46-4E02-9CB3-012361F5BE3F}
+	EndGlobalSection
+EndGlobal
