@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedVialGT.Server", "RedVial
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedVialGT.Shared", "RedVialGT.Shared\RedVialGT.Shared.csproj", "{6D49D5BC-04D6-440C-BFFF-CA5CD82E3D7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedVialGT.Client", "RedVialGT.Client\RedVialGT.Client.csproj", "{56F7FB1D-4F54-49AF-B340-19EE796F97E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6D49D5BC-04D6-440C-BFFF-CA5CD82E3D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D49D5BC-04D6-440C-BFFF-CA5CD82E3D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D49D5BC-04D6-440C-BFFF-CA5CD82E3D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56F7FB1D-4F54-49AF-B340-19EE796F97E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56F7FB1D-4F54-49AF-B340-19EE796F97E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56F7FB1D-4F54-49AF-B340-19EE796F97E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56F7FB1D-4F54-49AF-B340-19EE796F97E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
