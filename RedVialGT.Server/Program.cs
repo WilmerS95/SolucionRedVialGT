@@ -1,5 +1,6 @@
 using RedVialGT.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,11 +16,14 @@ builder.Services.AddDbContext<DbredVialGuatemalaContext>(opciones =>
     opciones.UseSqlServer(builder.Configuration.GetConnectionString("cadenaSQL"));
 });
 
-builder.Services.AddCors(opciones =>
+builder.Services.AddCors(options =>
 {
-    opciones.AddPolicy("NuevaPolitica", app =>
+    options.AddPolicy("NuevaPolitica", builder =>
     {
-        app.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        builder.WithOrigins("http://localhost:5020", "http://localhost:60095")
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials();
     });
 });
 

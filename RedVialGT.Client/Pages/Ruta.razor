@@ -1,17 +1,17 @@
-﻿@using RedVialGT.Shared;
+﻿@page "/rutas"
+
+@using RedVialGT.Shared;
 @using CurrieTechnologies.Razor.SweetAlert2;
 @using RedVialGT.Client.Services;
 
 @inject SweetAlertService Swal;
 @inject IRutaService rutaService;
 
-@page "/rutas"
-
 <h1>Rutas</h1>
 
 <button class="btn btn-success btn-small mb-3" href="ruta">Nueva Ruta</button>
 
-<table>
+<table class="table">
     <thead>
         <tr>
             <th>Nombre Ruta</th>
@@ -26,7 +26,7 @@
         {
             <tr>
                 <td colspan="5" align="center">
-                    <img style="width:60px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
                 </td>
             </tr>
         }
@@ -39,10 +39,10 @@
                         @item.NombreRuta
                     </td>
                     <td>
-                        @item.IdDepartamentoPartida
+                        @item.Departamento!.NombreDepartamento
                     </td>
                     <td>
-                        @item.IdDepartamentoDestino
+                        @item.Departamento!.NombreDepartamento
                     </td>
                     <td>
                         @item.DistanciaDepartamentos
@@ -63,12 +63,17 @@
 
 @code {
     List<RutaDTO>? listaRuta = null;
+    // List<RutaDTO>? listaDestino = null;
 
     protected override async Task OnInitializedAsync()
     {
-        listaRuta = await rutaService.ListaDestino();
-        listaRuta = await rutaService.ListaPartida();
+        ListaPartida = await rutaService.ListaRuta();
+
+        // ListaDestino = await rutaService.ListaDestino();
     }
+
+    List<RutaDTO> ListaPartida { get; set; }
+    List<RutaDTO> ListaDestino { get; set; }
 
     private async Task Eliminar(int id)
     {
@@ -87,5 +92,4 @@
                 listaRuta = listaRuta!.FindAll(e => e.IdRuta != id);
         }
     }
-
 }

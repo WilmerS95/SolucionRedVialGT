@@ -14,7 +14,7 @@ namespace RedVialGT.Client.Services
 
         public async Task<List<DepartamentoDTO>> ListaDepartamento()
         {
-            var result = await _http.GetFromJsonAsync<ResponseAPI<List<DepartamentoDTO>>>("api/Departamento/Lista");
+            var result = await _http.GetFromJsonAsync<ResponseAPI<List<DepartamentoDTO>>>("api/Departamento/ListaDepartamento");
 
             if (result!.EsCorrecto)
                 return result.Valor!;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RedVialGT.Server.Models;
+﻿namespace RedVialGT.Server.Models;
 
 public partial class Ruta
 {

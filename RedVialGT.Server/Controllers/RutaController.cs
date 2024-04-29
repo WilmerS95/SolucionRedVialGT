@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RedVialGT.Server.Models;
 using Microsoft.EntityFrameworkCore;
 using RedVialGT.Shared;
@@ -38,7 +37,11 @@ namespace RedVialGT.Server.Controllers
                         Departamento = new DepartamentoDTO
                         {
                             IdDepartamento = item.IdDepartamentoDestinoNavigation.IdDepartamento,
-                            NombreDepartamento = item.IdDepartamentoDestinoNavigation.NombreDepartamento
+                            NombreDepartamento = item.IdDepartamentoDestinoNavigation.NombreDepartamento,
+                            NombreCabecera = item.IdDepartamentoDestinoNavigation.NombreCabecera,
+                            DistanciaCapital = item.IdDepartamentoDestinoNavigation.DistanciaCapital,
+                            CantidadPoblacion = item.IdDepartamentoDestinoNavigation.CantidadPoblacion,
+                            CantidadMunicipios = item.IdDepartamentoDestinoNavigation.CantidadPoblacion,
                         }
                     });
                 }
@@ -54,7 +57,7 @@ namespace RedVialGT.Server.Controllers
         }
 
         [HttpGet]
-        [Route("ListaPatida")]
+        [Route("ListaPartida")]
         public async Task<IActionResult> ListaPartida()
         {
             var responseApi = new ResponseAPI<List<RutaDTO>>();
@@ -88,6 +91,7 @@ namespace RedVialGT.Server.Controllers
             }
             return Ok(responseApi);
         }
+
 
         [HttpGet]
         [Route("BuscarRuta/{id}")]
@@ -233,7 +237,4 @@ namespace RedVialGT.Server.Controllers
             return Ok(responseApi);
         }
     }
-
-
 }
-

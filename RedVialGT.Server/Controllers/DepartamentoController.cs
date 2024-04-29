@@ -18,7 +18,7 @@ namespace RedVialGT.Server.Controllers
         }
 
         [HttpGet]
-        [Route("Lista")]
+        [Route("ListaDepartamento")]
         public async Task<IActionResult> Lista()
         {
             var responseApi = new ResponseAPI<List<DepartamentoDTO>>();
@@ -35,7 +35,7 @@ namespace RedVialGT.Server.Controllers
                         NombreCabecera = item.NombreCabecera,
                         DistanciaCapital = item.DistanciaCapital,
                         CantidadPoblacion = item.CantidadPoblacion,
-                        CantidadMunicipios = item.CantidadMunicipios
+                        CantidadMunicipios = item.CantidadMunicipios,
                     });
                 }
                 responseApi.EsCorrecto = true;
