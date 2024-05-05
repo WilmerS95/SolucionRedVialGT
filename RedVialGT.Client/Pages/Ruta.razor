@@ -22,7 +22,7 @@
         </tr>
     </thead>
     <tbody>
-        @if (listaRuta == null)
+        @if (listaDestino == null)
         {
             <tr>
                 <td colspan="5" align="center">
@@ -32,7 +32,7 @@
         }
         else
         {
-            @foreach (var item in listaRuta)
+            @foreach (var item in listaDestino)
             {
                 <tr>
                     <td>
@@ -48,11 +48,11 @@
                         @item.DistanciaDepartamentos
                     </td>
                     <td>
-                        <a class="btn btn-primary btn-sm" href="ruta/@item.IdRuta">
-                            <i class="oi oi-pencil"></i>
+                        <a class="btn btn-primary" href="ruta/@item.IdRuta">
+                            Editar
                         </a>
-                        <button type="button" class="btn btn-danger btn-sm ms-2" @onclick="(()=> Eliminar(item.IdRuta))">
-                            <i class="oi oi-trash"></i>
+                        <button type="button" class="btn btn-danger" @onclick="(()=> Eliminar(item.IdRuta))">
+                            Eliminar
                         </button>
                     </td>
                 </tr>
@@ -62,18 +62,24 @@
 </table>
 
 @code {
-    List<RutaDTO>? listaRuta = null;
+    List<RutaDTO> listaDestino = new List<RutaDTO>();
     // List<RutaDTO>? listaDestino = null;
 
     protected override async Task OnInitializedAsync()
     {
-        ListaPartida = await rutaService.ListaRuta();
+       // ListaPartida = await rutaService.ListaRuta();
 
-        // ListaDestino = await rutaService.ListaDestino();
+        await CargarListaDestino();
     }
 
-    List<RutaDTO> ListaPartida { get; set; }
-    List<RutaDTO> ListaDestino { get; set; }
+    private async Task CargarListaDestino()
+    {
+        listaDestino = await rutaService.ListaDestino();
+    }
+
+
+   // List<RutaDTO> ListaPartida { get; set; }
+  // List<RutaDTO> ListaDestino { get; set; }
 
     private async Task Eliminar(int id)
     {
@@ -89,7 +95,7 @@
             var eliminado = await rutaService.Eliminar(id);
 
             if (eliminado)
-                listaRuta = listaRuta!.FindAll(e => e.IdRuta != id);
+                await CargarListaDestino();
         }
     }
 }

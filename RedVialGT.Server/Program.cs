@@ -1,6 +1,7 @@
 using RedVialGT.Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,14 +17,27 @@ builder.Services.AddDbContext<DbredVialGuatemalaContext>(opciones =>
     opciones.UseSqlServer(builder.Configuration.GetConnectionString("cadenaSQL"));
 });
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("NuevaPolitica", builder =>
+//    {
+//        builder.AllowAnyOrigin()
+//               .AllowAnyHeader()
+//               .AllowAnyMethod()
+//               .AllowCredentials();
+//    });
+//});
+
+var corsPolicyName = "DefaultCorsPolicy";
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("NuevaPolitica", builder =>
+    options.AddPolicy(corsPolicyName, policyBuilder =>
     {
-        builder.WithOrigins("http://localhost:5020", "http://localhost:60095")
-               .AllowAnyHeader()
-               .AllowAnyMethod()
-               .AllowCredentials();
+        policyBuilder.WithOrigins(allowedOrigins)
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
     });
 });
 
@@ -36,7 +50,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("NuevaPolitica");
+app.UseCors(corsPolicyName);
 
 app.UseAuthorization();
 

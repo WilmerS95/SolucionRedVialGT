@@ -12,9 +12,9 @@ namespace RedVialGT.Client.Services
             _http = http;
         }
 
-        public async Task<List<RutaDTO>> ListaRuta()
+        public async Task<List<RutaDTO>> ListaDestino()
         {
-            var result = await _http.GetFromJsonAsync<ResponseAPI<List<RutaDTO>>>("api/Ruta/ListaRuta");
+            var result = await _http.GetFromJsonAsync<ResponseAPI<List<RutaDTO>>>("api/Ruta/ListaDestino");
 
             if (result!.EsCorrecto)
                 return result.Valor!;
