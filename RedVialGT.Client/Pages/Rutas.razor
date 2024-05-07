@@ -1,0 +1,103 @@
+﻿@page "/rutas"
+
+@using RedVialGT.Shared;
+@using CurrieTechnologies.Razor.SweetAlert2;
+@using RedVialGT.Client.Services;
+
+@inject SweetAlertService Swal;
+@inject IRutaService rutaService;
+
+<PageTitle>Rutas</PageTitle>
+
+<h1>Rutas</h1>
+
+<a class="btn btn-success btn-small mb-3" href="ruta">Nueva Ruta</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre Ruta</th>
+            <th>Departamento De Partida</th>
+            <th>Departamento De Destino</th>
+            <th>Distancia en Km</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (listaDestino == null)
+        {
+            <tr>
+                <td colspan="5" align="center">
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in listaDestino)
+            {
+                <tr>
+                    <td>
+                        @item.NombreRuta
+                    </td>
+                    <td>
+                        @item.Departamento!.NombreDepartamento
+                    </td>
+                    <td>
+                        @item.Departamento!.NombreDepartamento
+                    </td>
+                    <td>
+                        @item.DistanciaDepartamentos
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" href="ruta/@item.IdRuta">
+                            Editar
+                        </a>
+                        <button type="button" class="btn btn-danger" @onclick="(()=> Eliminar(item.IdRuta))">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    List<RutaDTO> listaDestino = new List<RutaDTO>();
+    // List<RutaDTO>? listaDestino = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+       // ListaPartida = await rutaService.ListaRuta();
+
+        await CargarListaDestino();
+    }
+
+    private async Task CargarListaDestino()
+    {
+        listaDestino = await rutaService.ListaDestino();
+    }
+
+
+   // List<RutaDTO> ListaPartida { get; set; }
+  // List<RutaDTO> ListaDestino { get; set; }
+
+    private async Task Eliminar(int id)
+    {
+        var resultado = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Eliminar Ruta",
+                Text = "¿Deseas eliminar la ruta?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+        if (resultado.IsConfirmed)
+        {
+            var eliminado = await rutaService.Eliminar(id);
+
+            if (eliminado)
+                await CargarListaDestino();
+        }
+    }
+}

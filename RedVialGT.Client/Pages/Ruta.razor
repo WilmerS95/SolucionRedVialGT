@@ -1,101 +1,96 @@
-﻿@page "/rutas"
+﻿@page "/ruta"
+@page "/ruta/{idRutaEditar:int}"
 
 @using RedVialGT.Shared;
-@using CurrieTechnologies.Razor.SweetAlert2;
 @using RedVialGT.Client.Services;
 
-@inject SweetAlertService Swal;
 @inject IRutaService rutaService;
+@inject IDepartamentoService departamentoService;
+@inject NavigationManager navegacion;
 
-<h1>Rutas</h1>
+<PageTitle>@tituo</PageTitle>
 
-<button class="btn btn-success btn-small mb-3" href="ruta">Nueva Ruta</button>
+<h3>@tituo</h3>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre Ruta</th>
-            <th>Departamento De Partida</th>
-            <th>Departamento De Destino</th>
-            <th>Distancia en Km</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (listaDestino == null)
-        {
-            <tr>
-                <td colspan="5" align="center">
-                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
-                </td>
-            </tr>
-        }
-        else
-        {
-            @foreach (var item in listaDestino)
+<EditForm Model="ruta" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="mb-3">
+        <label class="form-label">Nombre Ruta</label>
+        <InputText class="form-control" @bind-Value="ruta.NombreRuta"></InputText>
+        <ValidationMessage For="@(()=> ruta.NombreRuta)"></ValidationMessage>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Departamento Partida</label>
+        <InputSelect class="form-select" @bind-Value="ruta.IdDepartamentoPartida">
+            <option value="0"> -- Seleccionar --</option>
+            @foreach (var item in listaDepartamento)
             {
-                <tr>
-                    <td>
-                        @item.NombreRuta
-                    </td>
-                    <td>
-                        @item.Departamento!.NombreDepartamento
-                    </td>
-                    <td>
-                        @item.Departamento!.NombreDepartamento
-                    </td>
-                    <td>
-                        @item.DistanciaDepartamentos
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" href="ruta/@item.IdRuta">
-                            Editar
-                        </a>
-                        <button type="button" class="btn btn-danger" @onclick="(()=> Eliminar(item.IdRuta))">
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
+                <option value="0">@item.NombreDepartamento</option>
             }
-        }
-    </tbody>
-</table>
+        </InputSelect>
+        <ValidationMessage For="@(()=> ruta.IdDepartamentoPartida)"></ValidationMessage>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Departamento Destino</label>
+        <InputSelect class="form-select" @bind-Value="ruta.IdDepartamentoDestino">
+            <option value="0"> -- Seleccionar --</option>
+            @foreach (var item in listaDepartamento)
+            {
+                <option value="0">@item.NombreDepartamento</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(()=> ruta.IdDepartamentoDestino)"></ValidationMessage>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Distancia en km</label>
+        <InputNumber class="form-control" @bind-Value="ruta.DistanciaDepartamentos"></InputNumber>
+        <ValidationMessage For="@(()=> ruta.DistanciaDepartamentos)"></ValidationMessage>
+    </div>
+    <button class="btn btn-primary" type="submit">
+        @btnTexto
+    </button>
+    <a class="btn btn-warning" href="rutas">
+        Volver
+    </a>
+</EditForm>
 
 @code {
-    List<RutaDTO> listaDestino = new List<RutaDTO>();
-    // List<RutaDTO>? listaDestino = null;
+    [Parameter]
+    public int idRutaEditar { get; set; } = 0;
+
+    string tituo = string.Empty;
+    string btnTexto = string.Empty;
+
+    RutaDTO ruta = new RutaDTO();
+    List<DepartamentoDTO> listaDepartamento = new List<DepartamentoDTO>();
 
     protected override async Task OnInitializedAsync()
     {
-       // ListaPartida = await rutaService.ListaRuta();
-
-        await CargarListaDestino();
-    }
-
-    private async Task CargarListaDestino()
-    {
-        listaDestino = await rutaService.ListaDestino();
-    }
-
-
-   // List<RutaDTO> ListaPartida { get; set; }
-  // List<RutaDTO> ListaDestino { get; set; }
-
-    private async Task Eliminar(int id)
-    {
-        var resultado = await Swal.FireAsync(new SweetAlertOptions
-            {
-                Title = "Eliminar Ruta",
-                Text = "¿Deseas eliminar la ruta?",
-                Icon = SweetAlertIcon.Question,
-                ShowCancelButton = true
-            });
-        if (resultado.IsConfirmed)
+        if (idRutaEditar != 0)
         {
-            var eliminado = await rutaService.Eliminar(id);
-
-            if (eliminado)
-                await CargarListaDestino();
+            ruta = await rutaService.Buscar(idRutaEditar);
+            btnTexto = "Actualizar Ruta";
+            tituo = "Editar Ruta";
         }
+        else
+        {
+            btnTexto = "Guardar Ruta";
+            tituo = "Nueva Ruta";
+        }
+        listaDepartamento = await departamentoService.ListaDepartamento();
+    }
+
+    private async Task OnValidSubmit()
+    {
+        int idDevuelto = 0;
+
+        if (idRutaEditar == 0)
+
+            idDevuelto = await rutaService.Guardar(ruta);
+        else
+            idDevuelto = await rutaService.Editar(ruta);
+
+        if (idDevuelto != 0)
+            navegacion.NavigateTo("/rutas");
     }
 }
