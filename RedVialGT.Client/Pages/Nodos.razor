@@ -1,1 +1,81 @@
-﻿
+﻿@using RedVialGT.Shared;
+@using RedVialGT.Client.Services;
+
+@page "/insertar-primer-nodo"
+
+<h3>Insertar Primer Nodo</h3>
+
+@if (listaRutas != null)
+{
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="selectRuta">Seleccionar Ruta</label>
+        <select class="form-select" id="selectRuta" @bind="idRutaSeleccionada">
+            <option value="0">Selecciona una ruta...</option>
+            @foreach (var ruta in listaRutas)
+            {
+                <option value="@ruta.IdRuta">@ruta.NombreRuta</option>
+            }
+        </select>
+        <button class="btn btn-primary" @onclick="InsertarPrimerNodo">Insertar Primer Nodo</button>
+    </div>
+}
+else
+{
+    {
+        <tr>
+            <td colspan="3" align="center">
+                <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+            </td>
+        </tr>
+    }
+}
+
+@if (mensaje != null)
+{
+    <p>@mensaje</p>
+}
+
+@if (primerNodoInsertado != null)
+{
+    <div>
+        <h4>Ruta del Primer Nodo Insertado</h4>
+        <p>@primerNodoInsertado.NombreRuta</p>
+    </div>
+}
+
+@code {
+    int idRutaSeleccionada;
+    string mensaje;
+    RutaDTO primerNodoInsertado;
+    List<RutaDTO> listaRutas;
+
+    [Inject]
+    public IRutaService RutaService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaRutas = await RutaService.ListaDestino();
+    }
+
+    async Task InsertarPrimerNodo()
+    {
+        if (idRutaSeleccionada != 0)
+        {
+            var rutaSeleccionada = listaRutas.FirstOrDefault(r => r.IdRuta == idRutaSeleccionada);
+
+            if (rutaSeleccionada != null)
+            {
+                primerNodoInsertado = rutaSeleccionada;
+                mensaje = "Se ha agregado el primer nodo de la lista con la ruta seleccionada";
+            }
+            else
+            {
+                mensaje = "La ruta seleccionada no es válida";
+            }
+        }
+        else
+        {
+            mensaje = "Por favor, selecciona una ruta";
+        }
+    }
+}

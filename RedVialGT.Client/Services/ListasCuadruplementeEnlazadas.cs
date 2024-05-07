@@ -1,10 +1,14 @@
 ﻿using RedVialGT.Shared;
+using System.Linq;
+using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RedVialGT.Client.Services
 {
     public class ListasCuadruplementeEnlazadas
     {
+        private readonly IRutaService _rutaService;
+
         public Nodo? primerNodo { get; set; }
         public Nodo? ultimoNodoNorte { get; set; }
         public Nodo? ultimoNodoSur { get; set; }
@@ -14,8 +18,9 @@ namespace RedVialGT.Client.Services
 
         public bool isEmpty => primerNodo == null;
 
-        public ListasCuadruplementeEnlazadas()
+        public ListasCuadruplementeEnlazadas(IRutaService rutaService)
         {
+            _rutaService = rutaService;
             primerNodo = null;
             ultimoNodoNorte = null;
             ultimoNodoSur = null;
@@ -24,22 +29,33 @@ namespace RedVialGT.Client.Services
             nodoActual = null;
         }
 
-        public string InsertarPrimerNodo(RutaDTO ruta)
+        public async Task<string> InsertarPrimerNodoDesdeBD()
         {
-            Nodo nuevoNodo = new Nodo(ruta);
             if (isEmpty)
             {
-                primerNodo = nuevoNodo;
-                ultimoNodoNorte = nuevoNodo;
-                ultimoNodoSur = nuevoNodo;
-                ultimoNodoEste = nuevoNodo;
-                ultimoNodoOeste = nuevoNodo;
+                // Obtener una ruta de la base de datos
+                var rutas = await _rutaService.ListaDestino(); // Asumiendo que IRutaService tiene un método para obtener las rutas
+                var primeraRuta = rutas.FirstOrDefault(); // Obtener la primera ruta (o puedes elegir otra lógica para seleccionarla)
 
-                return "Se ha agregado el primer nodo de la lista";
+                if (primeraRuta != null)
+                {
+                    // Crear el nodo con la ruta obtenida
+                    primerNodo = new Nodo(primeraRuta);
+                    ultimoNodoNorte = primerNodo;
+                    ultimoNodoSur = primerNodo;
+                    ultimoNodoEste = primerNodo;
+                    ultimoNodoOeste = primerNodo;
+
+                    return "Se ha agregado el primer nodo de la lista con la ruta obtenida de la base de datos";
+                }
+                else
+                {
+                    return "No se encontraron rutas en la base de datos para agregar como primer nodo";
+                }
             }
             else
             {
-                return "No se puede agregar primer nodo a la lista, porque ya existen nodos";
+                return "No se puede agregar el primer nodo a la lista porque ya existen nodos";
             }
         }
     }
