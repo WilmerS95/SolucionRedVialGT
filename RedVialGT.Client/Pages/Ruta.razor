@@ -25,7 +25,7 @@
             <option value="0"> -- Seleccionar --</option>
             @foreach (var item in listaDepartamento)
             {
-                <option value="@item.IdDepartamento">@item.NombreDepartamento</option>
+                <option value="@item.IdDepartamento">@item.IdDepartamento - @item.NombreDepartamento</option>
             }
         </InputSelect>
         <ValidationMessage For="@(()=> ruta.IdDepartamentoPartida)"></ValidationMessage>
@@ -36,7 +36,7 @@
             <option value="0"> -- Seleccionar --</option>
             @foreach (var item in listaDepartamento)
             {
-                <option value="@item.IdDepartamento">@item.NombreDepartamento</option>
+                <option value="@item.IdDepartamento">@item.IdDepartamento - @item.NombreDepartamento</option>
             }
         </InputSelect>
         <ValidationMessage For="@(()=> ruta.IdDepartamentoDestino)"></ValidationMessage>

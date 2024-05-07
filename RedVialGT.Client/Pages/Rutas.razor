@@ -16,45 +16,45 @@
 <table class="table">
     <thead>
         <tr>
-            <th>No</th>
-            <th>Nombre Ruta</th>
-            <th>Departamento De Partida</th>
-            <th>Departamento De Destino</th>
-            <th>Distancia en Km</th>
-            <th></th>
+            <th style="text-align: center;">No</th>
+            <th style="text-align: center;">Nombre Ruta</th>
+            <th style="text-align: center;">Departamento De Partida</th>
+            <th style="text-align: center;">Departamento De Destino</th>
+            <th style="text-align: center;">Distancia en Km</th>
+            <th ></th>
         </tr>
     </thead>
     <tbody>
         @if (listaDestino == null)
         {
             <tr>
-                <td colspan="5" align="center">
+                <td colspan="6" align="center">
                     <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
                 </td>
             </tr>
         }
         else
         {
-            @for (var i = 0; i < listaDestino.Count; i++    )
+            @for (var i = 0; i < listaDestino.Count; i++)
             {
                 var item = listaDestino[i];
                 <tr>
-                    <td>
+                    <td style="text-align: center;">
                         @(i + 1)
                     </td>
-                    <td>
+                    <td >
                         @item.NombreRuta
                     </td>
-                    <td>
+                    <td style="text-align: center;">
                         @item.DepartamentoPartida?.NombreDepartamento
                     </td>
-                    <td>
+                    <td style ="text-align: center;">
                         @item.DepartamentoDestino?.NombreDepartamento
                     </td>
-                    <td>
+                    <td style="text-align: center;">
                         @item.DistanciaDepartamentos
                     </td>
-                    <td>
+                    <td style="text-align: center;">
                         <a class="btn btn-primary" href="ruta/@item.IdRuta">
                             Editar
                         </a>
@@ -64,6 +64,7 @@
                     </td>
                 </tr>
             }
+
         }
     </tbody>
 </table>
