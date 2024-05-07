@@ -65,52 +65,52 @@ namespace RedVialGT.Server.Controllers
             return Ok(responseApi);
         }
 
-        [HttpGet]
-        [Route("ListaPartida")]
-        public async Task<IActionResult> ListaPartida()
-        {
-            var responseApi = new ResponseAPI<List<RutaDTO>>();
-            var listaRutaDTO = new List<RutaDTO>();
+        //[HttpGet]
+        //[Route("ListaPartida")]
+        //public async Task<IActionResult> ListaPartida()
+        //{
+        //    var responseApi = new ResponseAPI<List<RutaDTO>>();
+        //    var listaRutaDTO = new List<RutaDTO>();
 
-            try
-            {
-                foreach (var item in await _dbContext.Rutas.Include(d => d.IdDepartamentoPartidaNavigation).ToListAsync())
-                {
-                    listaRutaDTO.Add(new RutaDTO
-                    {
-                        IdRuta = item.IdRuta,
-                        NombreRuta = item.NombreRuta,
-                        IdDepartamentoPartida = item.IdDepartamentoPartida,
-                        IdDepartamentoDestino = item.IdDepartamentoDestino,
-                        DistanciaDepartamentos = item.DistanciaDepartamentos,
-                        DepartamentoPartida = new DepartamentoDTO
-                        {
-                            //IdDepartamento = item.IdDepartamentoPartidaNavigation.IdDepartamento,
-                            //NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento,
-                            IdDepartamento = item.IdDepartamentoPartidaNavigation.IdDepartamento,
-                            NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento,
-                            NombreCabecera = item.IdDepartamentoPartidaNavigation.NombreCabecera,
-                            DistanciaCapital = item.IdDepartamentoPartidaNavigation.DistanciaCapital,
-                            CantidadPoblacion = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
-                            CantidadMunicipios = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
-                        }//,
-                        //DepartamentoDestino = new DepartamentoDTO
-                        //{
-                        //    IdDepartamento = item.IdDepartamentoDestinoNavigation.IdDepartamento,
-                        //    NombreDepartamento = item.IdDepartamentoDestinoNavigation.NombreDepartamento,
-                        //}
-                    });
-                }
-                responseApi.EsCorrecto = true;
-                responseApi.Valor = listaRutaDTO;
-            }
-            catch (Exception ex)
-            {
-                responseApi.EsCorrecto = false;
-                responseApi.Mensaje = ex.Message;
-            }
-            return Ok(responseApi);
-        }
+        //    try
+        //    {
+        //        foreach (var item in await _dbContext.Rutas.Include(d => d.IdDepartamentoPartidaNavigation).ToListAsync())
+        //        {
+        //            listaRutaDTO.Add(new RutaDTO
+        //            {
+        //                IdRuta = item.IdRuta,
+        //                NombreRuta = item.NombreRuta,
+        //                IdDepartamentoPartida = item.IdDepartamentoPartida,
+        //                IdDepartamentoDestino = item.IdDepartamentoDestino,
+        //                DistanciaDepartamentos = item.DistanciaDepartamentos,
+        //                DepartamentoPartida = new DepartamentoDTO
+        //                {
+        //                    //IdDepartamento = item.IdDepartamentoPartidaNavigation.IdDepartamento,
+        //                    //NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento,
+        //                    IdDepartamento = item.IdDepartamentoPartidaNavigation.IdDepartamento,
+        //                    NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento,
+        //                    NombreCabecera = item.IdDepartamentoPartidaNavigation.NombreCabecera,
+        //                    DistanciaCapital = item.IdDepartamentoPartidaNavigation.DistanciaCapital,
+        //                    CantidadPoblacion = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
+        //                    CantidadMunicipios = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
+        //                }//,
+        //                //DepartamentoDestino = new DepartamentoDTO
+        //                //{
+        //                //    IdDepartamento = item.IdDepartamentoDestinoNavigation.IdDepartamento,
+        //                //    NombreDepartamento = item.IdDepartamentoDestinoNavigation.NombreDepartamento,
+        //                //}
+        //            });
+        //        }
+        //        responseApi.EsCorrecto = true;
+        //        responseApi.Valor = listaRutaDTO;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        responseApi.EsCorrecto = false;
+        //        responseApi.Mensaje = ex.Message;
+        //    }
+        //    return Ok(responseApi);
+        //}
 
 
         [HttpGet]
@@ -159,7 +159,7 @@ namespace RedVialGT.Server.Controllers
             {
                 var dbRuta = new Ruta
                 {
-                    IdRuta = ruta.IdRuta,
+                    //IdRuta = ruta.IdRuta,
                     NombreRuta = ruta.NombreRuta,
                     IdDepartamentoPartida = ruta.IdDepartamentoPartida,
                     IdDepartamentoDestino = ruta.IdDepartamentoDestino,

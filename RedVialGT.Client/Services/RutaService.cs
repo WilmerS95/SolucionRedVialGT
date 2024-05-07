@@ -64,7 +64,7 @@ namespace RedVialGT.Client.Services
 
         public async Task<bool> Eliminar(int id)
         {
-            var result = await _http.DeleteAsync($"api/Ruta/EditarRuta/{id}");
+            var result = await _http.DeleteAsync($"api/Ruta/EliminarRuta/{id}");
             var response = await result.Content.ReadFromJsonAsync<ResponseAPI<int>>();
 
             if (response!.EsCorrecto)
