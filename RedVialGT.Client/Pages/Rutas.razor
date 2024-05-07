@@ -16,6 +16,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>No</th>
             <th>Nombre Ruta</th>
             <th>Departamento De Partida</th>
             <th>Departamento De Destino</th>
@@ -34,9 +35,13 @@
         }
         else
         {
-            @foreach (var item in listaDestino)
+            @for (var i = 0; i < listaDestino.Count; i++    )
             {
+                var item = listaDestino[i];
                 <tr>
+                    <td>
+                        @(i + 1)
+                    </td>
                     <td>
                         @item.NombreRuta
                     </td>
