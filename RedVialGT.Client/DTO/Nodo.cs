@@ -10,13 +10,13 @@ namespace RedVialGT.Client.DTO
         public Nodo? ligaNorte { get; set; }
         public RutaDTO ruta { get; set; }
 
-        public Nodo(RutaDTO ruta)
+        public Nodo(RutaDTO Ruta)
         {
-            this.ligaOeste = ligaOeste;
-            this.ligaEste = ligaEste;
-            this.ligaSur = ligaSur;
-            this.ligaNorte = ligaNorte;
-            this.ruta = ruta;
+            ligaOeste = null;
+            ligaEste = null;
+            ligaSur = null;
+            ligaNorte = null;
+            ruta = Ruta;
         }
     }
 }
