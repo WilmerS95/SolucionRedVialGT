@@ -25,6 +25,7 @@ namespace RedVialGT.Shared
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public double DistanciaDepartamentos { get; set; }
 
-        public DepartamentoDTO? Departamento { get; set; }
+        public DepartamentoDTO? DepartamentoPartida { get; set; }
+        public DepartamentoDTO? DepartamentoDestino { get; set; }
     }
 }

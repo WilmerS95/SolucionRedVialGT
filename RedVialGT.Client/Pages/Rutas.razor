@@ -41,10 +41,10 @@
                         @item.NombreRuta
                     </td>
                     <td>
-                        @item.Departamento!.NombreDepartamento
+                        @item.DepartamentoPartida?.NombreDepartamento
                     </td>
                     <td>
-                        @item.Departamento!.NombreDepartamento
+                        @item.DepartamentoDestino?.NombreDepartamento
                     </td>
                     <td>
                         @item.DistanciaDepartamentos
@@ -62,6 +62,7 @@
         }
     </tbody>
 </table>
+
 
 @code {
     List<RutaDTO> listaDestino = new List<RutaDTO>();

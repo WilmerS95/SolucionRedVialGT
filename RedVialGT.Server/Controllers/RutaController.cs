@@ -25,7 +25,7 @@ namespace RedVialGT.Server.Controllers
 
             try
             {
-                foreach (var item in await _dbContext.Rutas.Include(d => d.IdDepartamentoDestinoNavigation).ToListAsync())
+                foreach (var item in await _dbContext.Rutas.Include(d => d.IdDepartamentoDestinoNavigation).Include(d => d.IdDepartamentoPartidaNavigation).ToListAsync())
                 {
                     listaRutaDTO.Add(new RutaDTO
                     {
@@ -34,7 +34,16 @@ namespace RedVialGT.Server.Controllers
                         IdDepartamentoPartida = item.IdDepartamentoPartida,
                         IdDepartamentoDestino = item.IdDepartamentoDestino,
                         DistanciaDepartamentos = item.DistanciaDepartamentos,
-                        Departamento = new DepartamentoDTO
+                        DepartamentoPartida = new DepartamentoDTO
+                        {
+                            IdDepartamento = item.IdDepartamentoPartidaNavigation.IdDepartamento,
+                            NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento,
+                            NombreCabecera = item.IdDepartamentoPartidaNavigation.NombreCabecera,
+                            DistanciaCapital = item.IdDepartamentoPartidaNavigation.DistanciaCapital,
+                            CantidadPoblacion = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
+                            CantidadMunicipios = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
+                        },
+                        DepartamentoDestino = new DepartamentoDTO
                         {
                             IdDepartamento = item.IdDepartamentoDestinoNavigation.IdDepartamento,
                             NombreDepartamento = item.IdDepartamentoDestinoNavigation.NombreDepartamento,
@@ -74,11 +83,22 @@ namespace RedVialGT.Server.Controllers
                         IdDepartamentoPartida = item.IdDepartamentoPartida,
                         IdDepartamentoDestino = item.IdDepartamentoDestino,
                         DistanciaDepartamentos = item.DistanciaDepartamentos,
-                        Departamento = new DepartamentoDTO
+                        DepartamentoPartida = new DepartamentoDTO
                         {
+                            //IdDepartamento = item.IdDepartamentoPartidaNavigation.IdDepartamento,
+                            //NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento,
                             IdDepartamento = item.IdDepartamentoPartidaNavigation.IdDepartamento,
                             NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento,
-                        }
+                            NombreCabecera = item.IdDepartamentoPartidaNavigation.NombreCabecera,
+                            DistanciaCapital = item.IdDepartamentoPartidaNavigation.DistanciaCapital,
+                            CantidadPoblacion = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
+                            CantidadMunicipios = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
+                        }//,
+                        //DepartamentoDestino = new DepartamentoDTO
+                        //{
+                        //    IdDepartamento = item.IdDepartamentoDestinoNavigation.IdDepartamento,
+                        //    NombreDepartamento = item.IdDepartamentoDestinoNavigation.NombreDepartamento,
+                        //}
                     });
                 }
                 responseApi.EsCorrecto = true;
