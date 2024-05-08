@@ -9,16 +9,16 @@
 
 @if (listaRutas != null)
 {
-    <div class="input-group-lg mb-3">
+    <div class="input-group mb-3">
         <label class="input-group-text" for="selectRuta">Seleccionar Ruta</label>
-        <select class="form-select form-select-lg mb-3" id="selectRuta" @bind="idRutaSeleccionada">
+        <select class="form-select" id="selectRuta" @bind="idRutaSeleccionada">
             <option value="0">Selecciona una ruta...</option>
             @foreach (var ruta in listaRutas)
             {
                 <option value="@ruta.IdRuta">@ruta.NombreRuta</option>
             }
         </select>
-        <button class="btn btn-primary-lg" @onclick="InsertarPrimerNodo">Insertar Primer Nodo</button>
+        <button class="btn btn-primary" @onclick="InsertarPrimerNodo">Insertar Primer Nodo</button>
     </div>
 }
 else
