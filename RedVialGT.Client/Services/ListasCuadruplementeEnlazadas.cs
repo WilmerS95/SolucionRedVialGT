@@ -34,8 +34,8 @@ namespace RedVialGT.Client.Services
             if (isEmpty)
             {
                 // Obtener una ruta de la base de datos
-                var rutas = await _rutaService.ListaDestino(); // Asumiendo que IRutaService tiene un método para obtener las rutas
-                var primeraRuta = rutas.FirstOrDefault(); // Obtener la primera ruta (o puedes elegir otra lógica para seleccionarla)
+                var rutas = await _rutaService.ListaDestino(); 
+                var primeraRuta = rutas.FirstOrDefault();
 
                 if (primeraRuta != null)
                 {

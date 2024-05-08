@@ -1,22 +1,24 @@
-﻿@using RedVialGT.Shared;
-@using RedVialGT.Client.Services;
+﻿@page "/insertar-primer-nodo"
 
-@page "/insertar-primer-nodo"
+@using RedVialGT.Shared;
+@using RedVialGT.Client.Services;
+@using System.Text.Json;
+@using Microsoft.JSInterop;
 
 <h3>Insertar Primer Nodo</h3>
 
 @if (listaRutas != null)
 {
-    <div class="input-group mb-3">
+    <div class="input-group-lg mb-3">
         <label class="input-group-text" for="selectRuta">Seleccionar Ruta</label>
-        <select class="form-select" id="selectRuta" @bind="idRutaSeleccionada">
+        <select class="form-select form-select-lg mb-3" id="selectRuta" @bind="idRutaSeleccionada">
             <option value="0">Selecciona una ruta...</option>
             @foreach (var ruta in listaRutas)
             {
                 <option value="@ruta.IdRuta">@ruta.NombreRuta</option>
             }
         </select>
-        <button class="btn btn-primary" @onclick="InsertarPrimerNodo">Insertar Primer Nodo</button>
+        <button class="btn btn-primary-lg" @onclick="InsertarPrimerNodo">Insertar Primer Nodo</button>
     </div>
 }
 else
@@ -24,6 +26,7 @@ else
     {
         <tr>
             <td colspan="3" align="center">
+                <p>Cargando</p>
                 <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
             </td>
         </tr>
@@ -44,8 +47,10 @@ else
 }
 
 @code {
+
+
     int idRutaSeleccionada;
-    string mensaje;
+    string mensaje = "";
     RutaDTO primerNodoInsertado;
     List<RutaDTO> listaRutas;
 
@@ -55,6 +60,12 @@ else
     protected override async Task OnInitializedAsync()
     {
         listaRutas = await RutaService.ListaDestino();
+
+        @* string primerNodoJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "primerNodo");
+        if (!string.IsNullOrEmpty(primerNodoJson))
+        {
+            primerNodoInsertado = JsonSerializer.Deserialize<RutaDTO>(primerNodoJson);
+        } *@
     }
 
     async Task InsertarPrimerNodo()
@@ -78,4 +89,10 @@ else
             mensaje = "Por favor, selecciona una ruta";
         }
     }
+
+    @* async Task GuardarListaNodosLocalmente()
+    {
+        string listaNodosJson = JsonSerializer.Serialize(primerNodoInsertado);
+        await JSRuntime.InvokeAsync("localStorage.setItem", "primerNodo", primerNodoJson);
+    } *@
 }
