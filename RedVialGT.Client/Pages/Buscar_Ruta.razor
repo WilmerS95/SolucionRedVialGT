@@ -2,13 +2,10 @@
 
 @using System.Collections.Generic
 @using System.Linq
-@using RedVialGT.Shared
-@using RedVialGT.Client.Services
-@using System.Text.Json
-@using Microsoft.JSInterop
-
-@inject IDepartamentoService departamentoService
-@inject IRutaService rutaService
+@using RedVialGT.Shared;
+@using RedVialGT.Client.Services;
+@using System.Text.Json;
+@using Microsoft.JSInterop;
 
 <h3>Buscar Ruta entre Departamentos</h3>
 
@@ -71,9 +68,13 @@ else
 @code {
     RutaDTO rutaPartida;
     RutaDTO rutaDestino;
+    //int idRutaPartida;
+    //int idRutaDestino;
     List<RutaDTO> listaRutas;
     List<List<Nodo>> rutasEncontradas;
+
     ListasCuadruplementeEnlazadas listasCuadruplementeEnlazadas;
+
 
     [Inject]
     public IRutaService RutaService { get; set; }
@@ -88,16 +89,19 @@ else
     {
         if (rutaPartida != null && rutaDestino != null)
         {
-            var rutaPartidaCompleta = await RutaService.Buscar(rutaPartida.IdRuta);
-            var rutaDestinoCompleta = await RutaService.Buscar(rutaDestino.IdRuta);
+            // Obtener la información completa de la ruta seleccionada
+            var _rutaPartida = await RutaService.Buscar(rutaPartida.IdRuta);
+            var _rutaDestino = await RutaService.Buscar(rutaDestino.IdRuta);
 
-            if (rutaPartidaCompleta != null && rutaDestinoCompleta != null)
+            if (rutaPartida != null && rutaDestino != null)
             {
-                var nodoPartida = listasCuadruplementeEnlazadas.BuscarNodoPorRuta(rutaPartidaCompleta);
-                var nodoDestino = listasCuadruplementeEnlazadas.BuscarNodoPorRuta(rutaDestinoCompleta);
+                // Buscar los nodos correspondientes a las rutas seleccionadas
+                var nodoPartida = listasCuadruplementeEnlazadas.BuscarNodoPorRuta(_rutaPartida);
+                var nodoDestino = listasCuadruplementeEnlazadas.BuscarNodoPorRuta(_rutaDestino);
 
                 if (nodoPartida != null && nodoDestino != null)
                 {
+                    // Buscar las rutas entre los nodos encontrados
                     rutasEncontradas = BuscarRutasEntreNodos(nodoPartida, nodoDestino);
                 }
                 else
@@ -113,6 +117,7 @@ else
         var rutas = new List<List<Nodo>>();
         var rutaActual = new List<Nodo>();
 
+        // Iniciar la búsqueda recursiva
         BuscarRutaDFS(nodoPartida, nodoDestino, rutaActual, rutas);
 
         return rutas;
@@ -120,14 +125,17 @@ else
 
     void BuscarRutaDFS(Nodo nodoActual, Nodo nodoDestino, List<Nodo> rutaActual, List<List<Nodo>> rutas)
     {
+        // Agregar el nodo actual a la ruta actual
         rutaActual.Add(nodoActual);
 
+        // Si el nodo actual es el nodo de destino, agregar la ruta actual a la lista de rutas
         if (nodoActual == nodoDestino)
         {
             rutas.Add(new List<Nodo>(rutaActual));
         }
         else
         {
+            // Explorar las ligas del nodo actual
             if (nodoActual.ligaNorte != null && !rutaActual.Contains(nodoActual.ligaNorte))
             {
                 BuscarRutaDFS(nodoActual.ligaNorte, nodoDestino, rutaActual, rutas);
@@ -146,6 +154,7 @@ else
             }
         }
 
+        // Eliminar el nodo actual de la ruta actual para retroceder
         rutaActual.Remove(nodoActual);
     }
 }
