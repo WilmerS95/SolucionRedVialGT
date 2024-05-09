@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace RedVialGT.Shared
 {
+    [TypeConverter(typeof(RutaDTOTypeConverter))]
     public class RutaDTO
     {
         public int IdRuta { get; set; }
 
-        [Required(ErrorMessage ="El campo {0} es requerido")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         public string NombreRuta { get; set; } = null!;
 
         [Required]
-        [Range(1,int.MaxValue, ErrorMessage = "El campo {0} es requerido")]
+        [Range(1, int.MaxValue, ErrorMessage = "El campo {0} es requerido")]
         public int IdDepartamentoPartida { get; set; }
 
         [Required]

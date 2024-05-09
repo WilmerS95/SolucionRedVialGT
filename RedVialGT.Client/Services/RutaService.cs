@@ -17,10 +17,10 @@ namespace RedVialGT.Client.Services
         {
             var result = await _http.GetFromJsonAsync<ResponseAPI<List<RutaDTO>>>("api/Ruta/ListaDestino");
 
-            if (result!.EsCorrecto)
+            if (result != null && result.EsCorrecto)
                 return result.Valor!;
             else
-                throw new Exception(result.Mensaje);
+                throw new Exception(result?.Mensaje ?? "Error al obtener la lista de destinos");
         }
 
         //public async Task<List<RutaDTO>> ListaPartida()

@@ -25,7 +25,11 @@ namespace RedVialGT.Server.Controllers
 
             try
             {
-                foreach (var item in await _dbContext.Rutas.Include(d => d.IdDepartamentoDestinoNavigation).Include(d => d.IdDepartamentoPartidaNavigation).ToListAsync())
+                var rutas = await _dbContext.Rutas
+                   .Include(r => r.IdDepartamentoPartidaNavigation)
+                   .Include(r => r.IdDepartamentoDestinoNavigation)
+                   .ToListAsync();
+                foreach (var item in rutas)
                 {
                     listaRutaDTO.Add(new RutaDTO
                     {

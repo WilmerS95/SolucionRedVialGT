@@ -1,0 +1,151 @@
+﻿@page "/buscar-ruta"
+
+@using System.Collections.Generic
+@using System.Linq
+@using RedVialGT.Shared
+@using RedVialGT.Client.Services
+@using System.Text.Json
+@using Microsoft.JSInterop
+
+@inject IDepartamentoService departamentoService
+@inject IRutaService rutaService
+
+<h3>Buscar Ruta entre Departamentos</h3>
+
+<div class="input-group mb-3">
+    <label class="input-group-text" for="selectRutaPartida">Seleccionar Departamento de Partida</label>
+    <select class="form-select" id="selectRutaPartida" @bind="rutaPartida">
+        <option value="0">Selecciona un departamento...</option>
+        @if (listaRutas != null)
+        {
+            foreach (var ruta in listaRutas)
+            {
+                <option value="@ruta.IdRuta">@ruta.NombreRuta</option>
+            }
+        }
+        else
+        {
+            <p>El objeto es null.</p>
+        }
+    </select>
+</div>
+
+<div class="input-group mb-3">
+    <label class="input-group-text" for="selectRutaDestino">Seleccionar Departamento de Destino</label>
+    <select class="form-select" id="selectRutaDestino" @bind="rutaDestino">
+        <option value="0">Selecciona un departamento...</option>
+        @if (listaRutas != null)
+        {
+            foreach (var ruta in listaRutas)
+            {
+                <option value="@ruta.IdRuta">@ruta.NombreRuta</option>
+            }
+        }
+        else
+        {
+            <p>El objeto es null.</p>
+        }
+    </select>
+</div>
+
+<button class="btn btn-primary" @onclick="BuscarRuta">Buscar Ruta</button>
+
+@if (rutasEncontradas != null && rutasEncontradas.Any())
+{
+    <h4>Rutas Encontradas</h4>
+    @foreach (var ruta in rutasEncontradas)
+    {
+        <ul>
+            @foreach (var nodo in ruta)
+            {
+                <li>@nodo.ruta.NombreRuta</li>
+            }
+        </ul>
+    }
+}
+else
+{
+    <p>No se encontraron rutas entre los departamentos seleccionados.</p>
+}
+
+@code {
+    RutaDTO rutaPartida;
+    RutaDTO rutaDestino;
+    List<RutaDTO> listaRutas;
+    List<List<Nodo>> rutasEncontradas;
+    ListasCuadruplementeEnlazadas listasCuadruplementeEnlazadas;
+
+    [Inject]
+    public IRutaService RutaService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaRutas = await RutaService.ListaDestino();
+        listasCuadruplementeEnlazadas = new ListasCuadruplementeEnlazadas(RutaService);
+    }
+
+    async Task BuscarRuta()
+    {
+        if (rutaPartida != null && rutaDestino != null)
+        {
+            var rutaPartidaCompleta = await RutaService.Buscar(rutaPartida.IdRuta);
+            var rutaDestinoCompleta = await RutaService.Buscar(rutaDestino.IdRuta);
+
+            if (rutaPartidaCompleta != null && rutaDestinoCompleta != null)
+            {
+                var nodoPartida = listasCuadruplementeEnlazadas.BuscarNodoPorRuta(rutaPartidaCompleta);
+                var nodoDestino = listasCuadruplementeEnlazadas.BuscarNodoPorRuta(rutaDestinoCompleta);
+
+                if (nodoPartida != null && nodoDestino != null)
+                {
+                    rutasEncontradas = BuscarRutasEntreNodos(nodoPartida, nodoDestino);
+                }
+                else
+                {
+                    rutasEncontradas = null;
+                }
+            }
+        }
+    }
+
+    List<List<Nodo>> BuscarRutasEntreNodos(Nodo nodoPartida, Nodo nodoDestino)
+    {
+        var rutas = new List<List<Nodo>>();
+        var rutaActual = new List<Nodo>();
+
+        BuscarRutaDFS(nodoPartida, nodoDestino, rutaActual, rutas);
+
+        return rutas;
+    }
+
+    void BuscarRutaDFS(Nodo nodoActual, Nodo nodoDestino, List<Nodo> rutaActual, List<List<Nodo>> rutas)
+    {
+        rutaActual.Add(nodoActual);
+
+        if (nodoActual == nodoDestino)
+        {
+            rutas.Add(new List<Nodo>(rutaActual));
+        }
+        else
+        {
+            if (nodoActual.ligaNorte != null && !rutaActual.Contains(nodoActual.ligaNorte))
+            {
+                BuscarRutaDFS(nodoActual.ligaNorte, nodoDestino, rutaActual, rutas);
+            }
+            if (nodoActual.ligaSur != null && !rutaActual.Contains(nodoActual.ligaSur))
+            {
+                BuscarRutaDFS(nodoActual.ligaSur, nodoDestino, rutaActual, rutas);
+            }
+            if (nodoActual.ligaEste != null && !rutaActual.Contains(nodoActual.ligaEste))
+            {
+                BuscarRutaDFS(nodoActual.ligaEste, nodoDestino, rutaActual, rutas);
+            }
+            if (nodoActual.ligaOeste != null && !rutaActual.Contains(nodoActual.ligaOeste))
+            {
+                BuscarRutaDFS(nodoActual.ligaOeste, nodoDestino, rutaActual, rutas);
+            }
+        }
+
+        rutaActual.Remove(nodoActual);
+    }
+}

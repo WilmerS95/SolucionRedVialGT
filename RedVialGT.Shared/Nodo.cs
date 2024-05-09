@@ -2,13 +2,13 @@
 {
     public class Nodo
     {
-        private int idRuta;
+        //private int idRuta;
 
         public Nodo? ligaOeste { get; set; }
         public Nodo? ligaEste { get; set; }
         public Nodo? ligaSur { get; set; }
         public Nodo? ligaNorte { get; set; }
-        public RutaDTO ruta { get; set; }
+        public RutaDTO? ruta { get; set; }
 
         public Nodo(RutaDTO Ruta)
         {
@@ -19,9 +19,13 @@
             ruta = Ruta;
         }
 
-        public Nodo(int idRuta)
+        public Nodo()
         {
-            this.idRuta = idRuta;
         }
+
+        //public Nodo(int idRuta)
+        //{
+        //    this.idRuta = idRuta;
+        //}
     }
 }
