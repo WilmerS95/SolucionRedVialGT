@@ -2,6 +2,8 @@
 {
     public class Nodo
     {
+        private int idRuta;
+
         public Nodo? ligaOeste { get; set; }
         public Nodo? ligaEste { get; set; }
         public Nodo? ligaSur { get; set; }
@@ -15,6 +17,11 @@
             ligaSur = null;
             ligaNorte = null;
             ruta = Ruta;
+        }
+
+        public Nodo(int idRuta)
+        {
+            this.idRuta = idRuta;
         }
     }
 }

@@ -24,12 +24,18 @@
 else
 {
     {
+    <tr>
+        <td colspan="6" align="center">
         <tr>
-            <td colspan="3" align="center">
-                <p>Cargando</p>
+            <td>
+                <p>Cargando...</p>
+            </td>
+            <td>
                 <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
             </td>
         </tr>
+    </td>
+</tr>
     }
 }
 
@@ -46,13 +52,27 @@ else
     </div>
 }
 
+@if (nodosConectados != null)
+{
+    <div>
+        <h4>Nodos Conectados</h4>
+        <ul>
+            @foreach (var nodo in nodosConectados)
+            {
+                <li>@nodo.IdRuta: @nodo.NombreRuta</li>
+            }
+        </ul>
+    </div>
+}
+
 @code {
-
-
     int idRutaSeleccionada;
     string mensaje = "";
     RutaDTO primerNodoInsertado;
     List<RutaDTO> listaRutas;
+    List<RutaDTO> nodosConectados;
+
+    ListasCuadruplementeEnlazadas listasCuadruplementeEnlazadas;
 
     [Inject]
     public IRutaService RutaService { get; set; }
@@ -60,6 +80,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         listaRutas = await RutaService.ListaDestino();
+        //listasCuadruplementeEnlazadas = new ListasCuadruplementeEnlazadas(RutaService);
 
         @* string primerNodoJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "primerNodo");
         if (!string.IsNullOrEmpty(primerNodoJson))
@@ -78,6 +99,8 @@ else
             {
                 primerNodoInsertado = rutaSeleccionada;
                 mensaje = "Se ha agregado el primer nodo de la lista con la ruta seleccionada";
+               // mensaje = await listasCuadruplementeEnlazadas.ConectarNodosDesdeBD();
+               // nodosConectados = ObtenerNodosConectados();
             }
             else
             {
@@ -89,6 +112,21 @@ else
             mensaje = "Por favor, selecciona una ruta";
         }
     }
+
+    @* List<RutaDTO> ObtenerNodosConectados()
+    {
+        var nodos = new List<RutaDTO>();
+        if (listasCuadruplementeEnlazadas.primerNodo != null)
+        {
+            var nodoActual = listasCuadruplementeEnlazadas.primerNodo;
+            while (nodoActual != null)
+            {
+                nodos.Add(listasCuadruplementeEnlazadas.ObtenerRutaPorId(nodoActual.ruta.IdRuta));
+                nodoActual = nodoActual.ligaEste;
+            }
+        }
+        return nodos;
+    } *@
 
     @* async Task GuardarListaNodosLocalmente()
     {
