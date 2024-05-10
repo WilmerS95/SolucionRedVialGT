@@ -9,8 +9,10 @@
 @using RedVialGT.Client
 
 @inject IRutaService rutaService
-
+<body class="background-image">
 <h3>Buscar Ruta entre Departamentos</h3>
+
+
 
 @if (listaRutas == null)
 {
@@ -62,7 +64,7 @@ else
     </div>
 
     <button class="btn btn-primary" @onclick="BuscarRuta">Buscar Ruta</button>
-    <button class="btn btn-primary" @onclick="MostrarListas">Mostrar Listas de Departamentos</button>
+    <button class="btn btn-primary" @onclick="MostrarListas">Mostrar Deptos Cercanos/Lejanos</button>
     <NavLink class="btn btn-warning" href="/grupo">Volver</NavLink>
 }
 
@@ -158,12 +160,12 @@ else
         @foreach (var nodo in nodosIntermedios[0])
         {
             @* <span class="list-item">*</span> *@
-            <span class="list-item"> | </span>
+            <span class="list-item"> || </span>
             <span class="list-item">@nodo.ruta.NombreRuta</span>
-            <span class="list-item"> | </span>
+            <span class="list-item"> || </span>
             @if (nodo != nodosIntermedios[0].Last())
             {
-                <span class="separator">   (*)===>   </span>
+                <span class="separator">   ]]===>   </span>
             }
         }
     </div>
@@ -175,19 +177,19 @@ else
         @foreach (var nodo in nodosIntermedios[1])
         {
             @* <span class="list-item">*</span> *@
-            <span class="list-item"> | </span>
+            <span class="list-item"> || </span>
             <span class="list-item">@nodo.ruta.NombreRuta</span>
-            <span class="list-item"> | </span>
+            <span class="list-item"> || </span>
             @if (nodo != nodosIntermedios[1].Last())
             {
-                <span class="separator">   (*)===>   </span>
+                <span class="separator">   ]]===>   </span>
             }
         }
     </div>
     <br />
     <tr>
         <td colspan="12" align="center">
-            <img style="width:50px; display:block; margin:auto;" src="~/rutasNodos.png" />
+            <img style="width:1200px; display:block; margin:auto;" src="rutasNodos.png" />
         </td>
     </tr>
     @* <img src="~/rutasNodos.png" alt="Imagen de la interconexion de los nodos"> *@
@@ -246,7 +248,7 @@ else
         <button class="btn btn-secondary" @onclick="CerrarModal">Ocultar</button>
     </Modal>
 }
-
+</body>
 @code {
     int idRutaPartida;
     int idRutaDestino;
