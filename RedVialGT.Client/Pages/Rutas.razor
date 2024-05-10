@@ -18,7 +18,7 @@
         <tr>
             <th style="text-align: center;">No</th>
             <th style="text-align: center;">Nombre Ruta</th>
-            <th style="text-align: center;">Departamento De Partida</th>
+            @* <th style="text-align: center;">Departamento De Partida</th> *@
             <th style="text-align: center;">Departamento De Destino</th>
             <th style="text-align: center;">Distancia en Km</th>
             <th ></th>
@@ -45,9 +45,9 @@
                     <td >
                         @item.NombreRuta
                     </td>
-                    <td style="text-align: center;">
+                    @* <td style="text-align: center;">
                         @item.DepartamentoPartida?.NombreDepartamento
-                    </td>
+                    </td> *@
                     <td style ="text-align: center;">
                         @item.DepartamentoDestino?.NombreDepartamento
                     </td>
