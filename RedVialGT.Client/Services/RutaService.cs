@@ -1,6 +1,9 @@
-﻿using RedVialGT.Shared;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
+using RedVialGT.Shared;
 
 namespace RedVialGT.Client.Services
 {
@@ -23,15 +26,6 @@ namespace RedVialGT.Client.Services
                 throw new Exception(result?.Mensaje ?? "Error al obtener la lista de destinos");
         }
 
-        //public async Task<List<RutaDTO>> ListaPartida()
-        //{
-        //    var result = await _http.GetFromJsonAsync<ResponseAPI<List<RutaDTO>>>("api/Ruta/ListaPartida");
-
-        //    if (result!.EsCorrecto)
-        //        return result.Valor!;
-        //    else
-        //        throw new Exception(result.Mensaje);
-        //}
         public async Task<RutaDTO> Buscar(int id)
         {
             var result = await _http.GetFromJsonAsync<ResponseAPI<RutaDTO>>($"api/Ruta/BuscarRuta/{id}");
@@ -43,7 +37,7 @@ namespace RedVialGT.Client.Services
         }
         public async Task<int> Guardar(RutaDTO ruta)
         {
-            var result = await _http.PostAsJsonAsync("api/Ruta/GuardarRuta",ruta);
+            var result = await _http.PostAsJsonAsync("api/Ruta/GuardarRuta", ruta);
             var response = await result.Content.ReadFromJsonAsync<ResponseAPI<int>>();
 
             if (response!.EsCorrecto)

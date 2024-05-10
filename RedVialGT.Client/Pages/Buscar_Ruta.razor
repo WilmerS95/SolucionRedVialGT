@@ -7,17 +7,7 @@
 @using System.Text.Json
 @using Microsoft.JSInterop
 
-@inject IDepartamentoService departamentoService
 @inject IRutaService rutaService
-
-@* .horizontal-list {
-    display: flex;
-    flex-direction: row;
-}
-
-.separator {
-    margin: 0 5px; /* Ajusta el espacio entre cada elemento */
-} *@
 
 <h3>Buscar Ruta entre Departamentos</h3>
 
@@ -37,6 +27,7 @@
             <p>El objeto es null.</p>
         }
     </select>
+    <button class="btn btn-secondary" @onclick="MostrarDatosDepartamentoPartida">Mostrar Datos</button>
 </div>
 
 <div class="input-group mb-3">
@@ -55,28 +46,48 @@
             <p>El objeto es null.</p>
         }
     </select>
+    <button class="btn btn-secondary" @onclick="MostrarDatosDepartamentoDestino">Mostrar Datos</button>
 </div>
 
 <button class="btn btn-primary" @onclick="BuscarRuta">Buscar Ruta</button>
 
-@* @if (nodosIntermedios != null && nodosIntermedios.Any())
-{
-    <h4>Ruta más corta - Distancia Total: @CalcularDistanciaTotal(nodosIntermedios[0]) Kms</h4>
-    <ul>
-        @foreach (var nodo in nodosIntermedios[0])
-        {
-            <li>@nodo.ruta.NombreRuta</li>
-        }
-    </ul>
-
-    <h4>Ruta más larga - Distancia Total: @CalcularDistanciaTotal(nodosIntermedios[1])</h4>
-    <ul>
-        @foreach (var nodo in nodosIntermedios[1])
-        {
-            <li>@nodo.ruta.NombreRuta</li>
-        }
-    </ul>
-} *@
+<div>
+    @if (departamentoSeleccionado != null)
+    {
+        <table class="table table-condensed">
+            <tr>
+                <td><strong>Cabecera Departamental:</strong></td>
+                <td>@departamentoSeleccionado.NombreCabecera</td>
+            </tr>
+            <tr>
+                <td><strong>Cantidad Poblacional:</strong></td>
+                <td>@($"{departamentoSeleccionado.CantidadPoblacion:#,0}")</td>
+            </tr>
+            <tr>
+                <td><strong>Cantidad de municipios:</strong></td>
+                <td>@departamentoSeleccionado.CantidadMunicipios</td>
+            </tr>
+            <tr>
+                <td><strong>Lugares Turísticos:</strong></td>
+                <td>
+                    @if (!string.IsNullOrEmpty(departamentoSeleccionado.LugaresTuristicos))
+                    {
+                        <ul>
+                            @foreach (var lugar in departamentoSeleccionado.LugaresTuristicos.Split(','))
+                            {
+                                <li>@lugar.Trim()</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No hay lugares turísticos registrados.</p>
+                    }
+                </td>
+            </tr>
+        </table>
+    }
+</div>
 
 @if (nodosIntermedios != null && nodosIntermedios.Any())
 {
@@ -106,20 +117,19 @@
         }
     </div>
 }
+
 @code {
     int idRutaPartida;
     int idRutaDestino;
     List<RutaDTO> listaRutas;
     List<List<Nodo>> nodosIntermedios;
     ListasCuadruplementeEnlazadas listasCuadruplementeEnlazadas;
-
-    [Inject]
-    public IRutaService RutaService { get; set; }
+    DepartamentoDTO departamentoSeleccionado;
 
     protected override async Task OnInitializedAsync()
     {
-        listaRutas = await RutaService.ListaDestino();
-        listasCuadruplementeEnlazadas = new ListasCuadruplementeEnlazadas(RutaService);
+        listaRutas = await rutaService.ListaDestino();
+        listasCuadruplementeEnlazadas = new ListasCuadruplementeEnlazadas(rutaService);
         await listasCuadruplementeEnlazadas.CrearNodosDesdeBD();
     }
 
@@ -127,8 +137,8 @@
     {
         if (idRutaPartida != 0 && idRutaDestino != 0)
         {
-            var rutaPartidaCompleta = await RutaService.Buscar(idRutaPartida);
-            var rutaDestinoCompleta = await RutaService.Buscar(idRutaDestino);
+            var rutaPartidaCompleta = await rutaService.Buscar(idRutaPartida);
+            var rutaDestinoCompleta = await rutaService.Buscar(idRutaDestino);
 
             if (rutaPartidaCompleta != null && rutaDestinoCompleta != null)
             {
@@ -214,5 +224,29 @@
             }
         }
         return distanciaTotal.ToString("#,##0.00");
+    }
+
+    async Task MostrarDatosDepartamentoDestino()
+    {
+        if (idRutaDestino != 0)
+        {
+            var rutaDestinoCompleta = await rutaService.Buscar(idRutaDestino);
+            if (rutaDestinoCompleta != null)
+            {
+                departamentoSeleccionado = rutaDestinoCompleta.DepartamentoDestino;
+            }
+        }
+    }
+
+    async Task MostrarDatosDepartamentoPartida()
+    {
+        if (idRutaPartida != 0)
+        {
+            var rutaPartidaCompleta = await rutaService.Buscar(idRutaPartida);
+            if (rutaPartidaCompleta != null)
+            {
+                departamentoSeleccionado = rutaPartidaCompleta.DepartamentoDestino;
+            }
+        }
     }
 }

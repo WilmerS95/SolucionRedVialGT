@@ -46,6 +46,7 @@ namespace RedVialGT.Server.Controllers
                             DistanciaCapital = item.IdDepartamentoPartidaNavigation.DistanciaCapital,
                             CantidadPoblacion = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
                             CantidadMunicipios = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
+                            LugaresTuristicos = item.IdDepartamentoPartidaNavigation.LugaresTuristicos,
                         },
                         DepartamentoDestino = new DepartamentoDTO
                         {
@@ -55,6 +56,7 @@ namespace RedVialGT.Server.Controllers
                             DistanciaCapital = item.IdDepartamentoDestinoNavigation.DistanciaCapital,
                             CantidadPoblacion = item.IdDepartamentoDestinoNavigation.CantidadPoblacion,
                             CantidadMunicipios = item.IdDepartamentoDestinoNavigation.CantidadPoblacion,
+                            LugaresTuristicos = item.IdDepartamentoDestinoNavigation.LugaresTuristicos,
                         }
                     });
                 }
@@ -69,75 +71,47 @@ namespace RedVialGT.Server.Controllers
             return Ok(responseApi);
         }
 
-        //[HttpGet]
-        //[Route("ListaPartida")]
-        //public async Task<IActionResult> ListaPartida()
-        //{
-        //    var responseApi = new ResponseAPI<List<RutaDTO>>();
-        //    var listaRutaDTO = new List<RutaDTO>();
-
-        //    try
-        //    {
-        //        foreach (var item in await _dbContext.Rutas.Include(d => d.IdDepartamentoPartidaNavigation).ToListAsync())
-        //        {
-        //            listaRutaDTO.Add(new RutaDTO
-        //            {
-        //                IdRuta = item.IdRuta,
-        //                NombreRuta = item.NombreRuta,
-        //                IdDepartamentoPartida = item.IdDepartamentoPartida,
-        //                IdDepartamentoDestino = item.IdDepartamentoDestino,
-        //                DistanciaDepartamentos = item.DistanciaDepartamentos,
-        //                DepartamentoPartida = new DepartamentoDTO
-        //                {
-        //                    //IdDepartamento = item.IdDepartamentoPartidaNavigation.IdDepartamento,
-        //                    //NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento,
-        //                    IdDepartamento = item.IdDepartamentoPartidaNavigation.IdDepartamento,
-        //                    NombreDepartamento = item.IdDepartamentoPartidaNavigation.NombreDepartamento,
-        //                    NombreCabecera = item.IdDepartamentoPartidaNavigation.NombreCabecera,
-        //                    DistanciaCapital = item.IdDepartamentoPartidaNavigation.DistanciaCapital,
-        //                    CantidadPoblacion = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
-        //                    CantidadMunicipios = item.IdDepartamentoPartidaNavigation.CantidadPoblacion,
-        //                }//,
-        //                //DepartamentoDestino = new DepartamentoDTO
-        //                //{
-        //                //    IdDepartamento = item.IdDepartamentoDestinoNavigation.IdDepartamento,
-        //                //    NombreDepartamento = item.IdDepartamentoDestinoNavigation.NombreDepartamento,
-        //                //}
-        //            });
-        //        }
-        //        responseApi.EsCorrecto = true;
-        //        responseApi.Valor = listaRutaDTO;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        responseApi.EsCorrecto = false;
-        //        responseApi.Mensaje = ex.Message;
-        //    }
-        //    return Ok(responseApi);
-        //}
-
-
+        
         [HttpGet]
         [Route("BuscarRuta/{id}")]
         public async Task<IActionResult> BuscarRuta(int id)
         {
             var responseApi = new ResponseAPI<RutaDTO>();
-            var RutaDTO = new RutaDTO();
+            var rutaDTO = new RutaDTO();
 
             try
             {
-                var dbRuta = await _dbContext.Rutas.FirstOrDefaultAsync(x => x.IdRuta == id);
+                var dbRuta = await _dbContext.Rutas
+                    .Include(r => r.IdDepartamentoPartidaNavigation)
+                    .FirstOrDefaultAsync(x => x.IdRuta == id);
 
                 if (dbRuta != null)
                 {
-                    RutaDTO.IdRuta = dbRuta.IdRuta;
-                    RutaDTO.NombreRuta = dbRuta.NombreRuta;
-                    RutaDTO.IdDepartamentoPartida = dbRuta.IdDepartamentoPartida;
-                    RutaDTO.IdDepartamentoDestino = dbRuta.IdDepartamentoDestino;
-                    RutaDTO.DistanciaDepartamentos = dbRuta.DistanciaDepartamentos;
+                    rutaDTO.IdRuta = dbRuta.IdRuta;
+                    rutaDTO.NombreRuta = dbRuta.NombreRuta;
+                    rutaDTO.IdDepartamentoPartida = dbRuta.IdDepartamentoPartida;
+                    rutaDTO.IdDepartamentoDestino = dbRuta.IdDepartamentoDestino;
+                    rutaDTO.DistanciaDepartamentos = dbRuta.DistanciaDepartamentos;
+
+                    var departamentoDestino = await _dbContext.Departamentos
+                        .FirstOrDefaultAsync(d => d.IdDepartamento == dbRuta.IdDepartamentoDestino);
+
+                    if (departamentoDestino != null)
+                    {
+                        rutaDTO.DepartamentoDestino = new DepartamentoDTO
+                        {
+                            IdDepartamento = departamentoDestino.IdDepartamento,
+                            NombreDepartamento = departamentoDestino.NombreDepartamento,
+                            NombreCabecera = departamentoDestino.NombreCabecera,
+                            DistanciaCapital = departamentoDestino.DistanciaCapital,
+                            CantidadPoblacion = departamentoDestino.CantidadPoblacion,
+                            CantidadMunicipios = departamentoDestino.CantidadMunicipios,
+                            LugaresTuristicos = departamentoDestino.LugaresTuristicos,
+                        };
+                    }
 
                     responseApi.EsCorrecto = true;
-                    responseApi.Valor = RutaDTO;
+                    responseApi.Valor = rutaDTO;
                 }
                 else
                 {

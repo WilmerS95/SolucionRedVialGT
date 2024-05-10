@@ -7,6 +7,8 @@ namespace RedVialGT.Client.Services
     {
         Task<List<RutaDTO>> ListaDestino();
         //Task<List<RutaDTO>> ListaPartida();
+        //Task<RutaDTO> Buscar(int id);
+
         Task<RutaDTO> Buscar(int id);
         Task<int> Guardar(RutaDTO ruta);
         Task<int> Editar(RutaDTO ruta);
