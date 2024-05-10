@@ -10,6 +10,15 @@
 @inject IDepartamentoService departamentoService
 @inject IRutaService rutaService
 
+@* .horizontal-list {
+    display: flex;
+    flex-direction: row;
+}
+
+.separator {
+    margin: 0 5px; /* Ajusta el espacio entre cada elemento */
+} *@
+
 <h3>Buscar Ruta entre Departamentos</h3>
 
 <div class="input-group mb-3">
@@ -50,7 +59,7 @@
 
 <button class="btn btn-primary" @onclick="BuscarRuta">Buscar Ruta</button>
 
-@if (nodosIntermedios != null && nodosIntermedios.Any())
+@* @if (nodosIntermedios != null && nodosIntermedios.Any())
 {
     <h4>Ruta más corta - Distancia Total: @CalcularDistanciaTotal(nodosIntermedios[0]) Kms</h4>
     <ul>
@@ -67,8 +76,36 @@
             <li>@nodo.ruta.NombreRuta</li>
         }
     </ul>
-}
+} *@
 
+@if (nodosIntermedios != null && nodosIntermedios.Any())
+{
+    <h4>Ruta más corta - Distancia Total: @CalcularDistanciaTotal(nodosIntermedios[0]) Kms</h4>
+    <div class="horizontal-list">
+        @foreach (var nodo in nodosIntermedios[0])
+        {
+            <span class="list-item">*</span>
+            <span class="list-item">@nodo.ruta.NombreRuta</span>
+            @if (nodo != nodosIntermedios[0].Last())
+            {
+                <span class="separator">   =>   </span>
+            }
+        }
+    </div>
+
+    <h4>Ruta más larga - Distancia Total: @CalcularDistanciaTotal(nodosIntermedios[1]) Kms</h4>
+    <div class="horizontal-list">
+        @foreach (var nodo in nodosIntermedios[1])
+        {
+            <span class="list-item">*</span>
+            <span class="list-item">@nodo.ruta.NombreRuta</span>
+            @if (nodo != nodosIntermedios[1].Last())
+            {
+                <span class="separator">   =>   </span>
+            }
+        }
+    </div>
+}
 @code {
     int idRutaPartida;
     int idRutaDestino;
