@@ -6,120 +6,152 @@
 @using RedVialGT.Client.Services
 @using System.Text.Json
 @using Microsoft.JSInterop
+@using RedVialGT.Client
 
 @inject IRutaService rutaService
 
 <h3>Buscar Ruta entre Departamentos</h3>
 
-<div class="input-group mb-3">
-    <label class="input-group-text" for="selectRutaPartida">Seleccionar Departamento de Partida</label>
-    <select class="form-select" id="selectRutaPartida" @bind="idRutaPartida">
-        <option value="0">Selecciona un departamento...</option>
-        @if (listaRutas != null)
-        {
-            foreach (var ruta in listaRutas)
+@if (listaRutas == null)
+{
+    <tr>
+        <td colspan="12" align="center">
+            <img style="width:50px; display:block; margin:auto;" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+        </td>
+    </tr>
+}
+else
+{
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="selectRutaPartida">Seleccionar Departamento de Partida</label>
+        <select class="form-select" id="selectRutaPartida" @bind="idRutaPartida">
+            <option value="0">Selecciona un departamento...</option>
+            @if (listaRutas != null)
             {
-                <option value="@ruta.IdRuta">@ruta.NombreRuta</option>
+                foreach (var ruta in listaRutas)
+                {
+                    <option value="@ruta.IdRuta">@ruta.NombreRuta</option>
+                }
             }
-        }
-        else
-        {
-            <p>El objeto es null.</p>
-        }
-    </select>
-    <button class="btn btn-secondary" @onclick="MostrarDatosDepartamentoPartida">Mostrar Datos</button>
-</div>
-
-<div class="input-group mb-3">
-    <label class="input-group-text" for="selectRutaDestino">Seleccionar Departamento de Destino</label>
-    <select class="form-select" id="selectRutaDestino" @bind="idRutaDestino">
-        <option value="0">Selecciona un departamento...</option>
-        @if (listaRutas != null)
-        {
-            foreach (var ruta in listaRutas)
+            else
             {
-                <option value="@ruta.IdRuta">@ruta.NombreRuta</option>
+                <p>El objeto es null.</p>
             }
-        }
-        else
-        {
-            <p>El objeto es null.</p>
-        }
-    </select>
-    <button class="btn btn-secondary" @onclick="MostrarDatosDepartamentoDestino">Mostrar Datos</button>
-</div>
+        </select>
+        <button class="btn btn-secondary" @onclick="MostrarDatosDepartamentoPartida">Mostrar Datos</button>
+    </div>
 
-<button class="btn btn-primary" @onclick="BuscarRuta">Buscar Ruta</button>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="selectRutaDestino">Seleccionar Departamento de Destino</label>
+        <select class="form-select" id="selectRutaDestino" @bind="idRutaDestino">
+            <option value="0">Selecciona un departamento...</option>
+            @if (listaRutas != null)
+            {
+                foreach (var ruta in listaRutas)
+                {
+                    <option value="@ruta.IdRuta">@ruta.NombreRuta</option>
+                }
+            }
+            else
+            {
+                <p>El objeto es null.</p>
+            }
+        </select>
+        <button class="btn btn-secondary" @onclick="MostrarDatosDepartamentoDestino">Mostrar Datos</button>
+    </div>
+
+    <button class="btn btn-primary" @onclick="BuscarRuta">Buscar Ruta</button>
+    <button class="btn btn-primary" @onclick="MostrarListas">Mostrar Listas de Departamentos</button>
+    <NavLink class="btn btn-warning" href="/grupo">Volver</NavLink>
+}
 
 <div>
     @if (departamentoSeleccionado != null)
     {
+        <br />
+        <br />
         <table class="table table-condensed">
-            <tr>
-                <td><strong>Cabecera Departamental:</strong></td>
-                <td>@departamentoSeleccionado.NombreCabecera</td>
-            </tr>
-            <tr>
-                <td><strong>Cantidad Poblacional:</strong></td>
-                <td>@($"{departamentoSeleccionado.CantidadPoblacion:#,0}")</td>
-            </tr>
-            <tr>
-                <td><strong>Cantidad de municipios:</strong></td>
-                <td>@departamentoSeleccionado.CantidadMunicipios</td>
-            </tr>
-            <tr>
-                <td><strong>Lugares Turísticos:</strong></td>
-                <td>
-                    @if (!string.IsNullOrEmpty(departamentoSeleccionado.LugaresTuristicos))
-                    {
-                        <ul>
-                            @foreach (var lugar in departamentoSeleccionado.LugaresTuristicos.Split(','))
-                            {
-                                <li>@lugar.Trim()</li>
-                            }
-                        </ul>
-                    }
-                    else
-                    {
-                        <p>No hay lugares turísticos registrados.</p>
-                    }
-                </td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td scope="col"><strong>Cabecera Departamental:</strong></td>
+                    <td scope="col">@departamentoSeleccionado.NombreCabecera</td>
+                </tr>
+                <tr>
+                    <td scope="col"><strong>Distancia Capital:</strong></td>
+                    <td scope="col">@($"{departamentoSeleccionado.DistanciaCapital:#,0} Kms")</td>
+                </tr>
+                <tr>
+                    <td scope="col"><strong>Cantidad Poblacional:</strong></td>
+                    <td scope="col">@($"{departamentoSeleccionado.CantidadPoblacion:#,0}")</td>
+                </tr>
+                <tr>
+                    <td scope="col"><strong>Cantidad de municipios:</strong></td>
+                    <td scope="col">@departamentoSeleccionado.CantidadMunicipios</td>
+                </tr>
+                <tr>
+                    <td scope="col"><strong>Lugares Turísticos:</strong></td>
+                    <td scope="col">
+                        @if (!string.IsNullOrEmpty(departamentoSeleccionado.LugaresTuristicos))
+                        {
+                            <ul>
+                                @foreach (var lugar in departamentoSeleccionado.LugaresTuristicos.Split(','))
+                                {
+                                    <li>@lugar.Trim()</li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p>No hay lugares turísticos registrados.</p>
+                        }
+                    </td>
+                </tr>
+            </tbody>
         </table>
+        <button class="btn btn-secondary" @onclick="OcultarDatosDepartamento">Ocultar</button>
     }
 </div>
-<h4>Departamentos más cercanos a Guatemala:</h4>
-@if (departamentosCercanos != null && departamentosCercanos.Any())
-{
-    <ul>
-        @foreach (var departamento in departamentosCercanos)
-        {
-            <li>@departamento</li>
-        }
-    </ul>
-}
-else
-{
-    <p>No se encontraron departamentos cercanos.</p>
-}
 
-<h4>Departamentos más lejanos a Guatemala:</h4>
-@if (departamentosLejanos != null && departamentosLejanos.Any())
-{
-    <ul>
-        @foreach (var departamento in departamentosLejanos)
+
+@* <div class="row">
+    <div class="col-md-6">
+        <h4>Departamentos más cercanos a Guatemala:</h4>
+        @if (departamentosCercanos != null && departamentosCercanos.Any())
         {
-            <li>@departamento</li>
+            <ul>
+                @foreach (var departamento in departamentosCercanos)
+                {
+                    <li>@departamento</li>
+                }
+            </ul>
         }
-    </ul>
-}
-else
-{
-    <p>No se encontraron departamentos lejanos.</p>
-}
+        else
+        {
+            <p>No se encontraron departamentos cercanos.</p>
+        }
+    </div>
+    <div class="col-md-6">
+        <h4>Departamentos más lejanos a Guatemala:</h4>
+        @if (departamentosLejanos != null && departamentosLejanos.Any())
+        {
+            <ul>
+                @foreach (var departamento in departamentosLejanos)
+                {
+                    <li>@departamento</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No se encontraron departamentos lejanos.</p>
+        }
+    </div>
+</div> *@
 
 @if (nodosIntermedios != null && nodosIntermedios.Any())
 {
+    <br />
+    <br />
     <h4>Ruta más corta - Distancia Total: @CalcularDistanciaTotal(nodosIntermedios[0]) Kms</h4>
     <div class="horizontal-list">
         @foreach (var nodo in nodosIntermedios[0])
@@ -133,6 +165,8 @@ else
         }
     </div>
 
+    <br />
+    <br />
     <h4>Ruta más larga - Distancia Total: @CalcularDistanciaTotal(nodosIntermedios[1]) Kms</h4>
     <div class="horizontal-list">
         @foreach (var nodo in nodosIntermedios[1])
@@ -145,6 +179,62 @@ else
             }
         }
     </div>
+    <br />
+    @* <img src="~/rutasNodos.png" alt="Imagen de la interconexion de los nodos"> *@
+    <br />
+    <button class="btn btn-secondary" @onclick="OcultarRutas">Ocultar Rutas</button>
+}
+
+@if (mostrarListas)
+{
+    <Modal>
+        <div class="col-md-12">
+            <br />
+            <br />
+            <h3 class="text-center">Departamentos Mas Lejanos y Mas Cercanos A La Capital</h3>
+        </div>
+        <div class="row">
+            <div class="row">
+                <br />
+                <br />
+                <div class="col-md-6">
+                    <h4>Top 10 Departamentos más cercanos a Guatemala:</h4>
+                    @if (departamentosCercanos != null && departamentosCercanos.Any())
+                    {
+                        <ul>
+                            @foreach (var departamento in departamentosCercanos)
+                            {
+                                <li>@departamento</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No se encontraron departamentos cercanos.</p>
+                    }
+                </div>
+                <br />
+                <br />
+                <div class="col-md-6">
+                    <h4>Top 10 Departamentos más lejanos a Guatemala:</h4>
+                    @if (departamentosLejanos != null && departamentosLejanos.Any())
+                    {
+                        <ul>
+                            @foreach (var departamento in departamentosLejanos)
+                            {
+                                <li>@departamento</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No se encontraron departamentos lejanos.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-secondary" @onclick="CerrarModal">Ocultar</button>
+    </Modal>
 }
 
 @code {
@@ -164,8 +254,30 @@ else
         await listasCuadruplementeEnlazadas.CrearNodosDesdeBD();
 
         var (cercanos, lejanos) = await listasCuadruplementeEnlazadas.ObtenerDepartamentosCercanosYLejanos();
-    departamentosCercanos = cercanos;
-    departamentosLejanos = lejanos;
+        departamentosCercanos = cercanos;
+        departamentosLejanos = lejanos;
+    }
+
+    bool mostrarListas = false;
+    bool mostrarListasrutas = false;
+
+    async Task MostrarListas()
+    {
+        mostrarListas = true;
+    }
+
+    void CerrarModal()
+    {
+        mostrarListas = false;
+    }
+    void OcultarDatosDepartamento()
+    {
+        departamentoSeleccionado = null;
+    }
+
+    void OcultarRutas()
+    {
+        nodosIntermedios = null;
     }
 
     async Task BuscarRuta()
