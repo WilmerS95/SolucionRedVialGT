@@ -113,9 +113,6 @@ namespace RedVialGT.Client.Services
         //    return new Nodo(ruta);
         //}
 
-
-
-
         private async Task<RutaDTO> ObtenerRutaDesdeBD(RutaDTO ruta)
         {
             return await _rutaService.Buscar(ruta.IdRuta);
@@ -388,7 +385,6 @@ namespace RedVialGT.Client.Services
             var listaNodos = ObtenerListaNodos();
             var listaDepartamentos = new List<DepartamentoDTO>();
 
-            // Calcular la distancia desde la capital a cada departamento y agregarla a la lista
             foreach (var nodo in listaNodos)
             {
                 if (nodo != null && nodo.ruta != null && nodo.ruta.DepartamentoDestino.DistanciaCapital > 0)
@@ -402,10 +398,8 @@ namespace RedVialGT.Client.Services
                 }
             }
 
-            // Ordenar la lista por distancia ascendente
             listaDepartamentos = listaDepartamentos.OrderBy(d => d.DistanciaCapital).ToList();
 
-            // Tomar los 10 departamentos más cercanos y los 10 más lejanos
             var departamentosCercanos = listaDepartamentos.Take(10).Select(d => d.NombreDepartamento).ToList();
             var departamentosLejanos = listaDepartamentos.TakeLast(10).Select(d => d.NombreDepartamento).ToList();
 
