@@ -383,7 +383,7 @@ namespace RedVialGT.Client.Services
         }
 
 
-        public async Task<List<DepartamentoDTO>> ObtenerDepartamentosCercanosYLejanos()
+        public async Task<(List<string> cercanos, List<string> lejanos)> ObtenerDepartamentosCercanosYLejanos()
         {
             var listaNodos = ObtenerListaNodos();
             var listaDepartamentos = new List<DepartamentoDTO>();
@@ -396,6 +396,7 @@ namespace RedVialGT.Client.Services
                     listaDepartamentos.Add(new DepartamentoDTO
                     {
                         NombreCabecera = nodo.ruta.DepartamentoDestino.NombreCabecera,
+                        NombreDepartamento = nodo.ruta.DepartamentoDestino.NombreDepartamento,
                         DistanciaCapital = nodo.ruta.DepartamentoDestino.DistanciaCapital,
                     });
                 }
@@ -405,13 +406,10 @@ namespace RedVialGT.Client.Services
             listaDepartamentos = listaDepartamentos.OrderBy(d => d.DistanciaCapital).ToList();
 
             // Tomar los 10 departamentos más cercanos y los 10 más lejanos
-            var departamentosCercanos = listaDepartamentos.Take(10).ToList();
-            var departamentosLejanos = listaDepartamentos.TakeLast(10).ToList();
+            var departamentosCercanos = listaDepartamentos.Take(10).Select(d => d.NombreDepartamento).ToList();
+            var departamentosLejanos = listaDepartamentos.TakeLast(10).Select(d => d.NombreDepartamento).ToList();
 
-            // Concatenar los resultados
-            var resultado = departamentosCercanos.Concat(departamentosLejanos).ToList();
-
-            return resultado;
+            return (departamentosCercanos, departamentosLejanos);
         }
     }
 }

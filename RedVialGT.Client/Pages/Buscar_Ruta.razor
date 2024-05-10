@@ -88,6 +88,35 @@
         </table>
     }
 </div>
+<h4>Departamentos más cercanos a Guatemala:</h4>
+@if (departamentosCercanos != null && departamentosCercanos.Any())
+{
+    <ul>
+        @foreach (var departamento in departamentosCercanos)
+        {
+            <li>@departamento</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No se encontraron departamentos cercanos.</p>
+}
+
+<h4>Departamentos más lejanos a Guatemala:</h4>
+@if (departamentosLejanos != null && departamentosLejanos.Any())
+{
+    <ul>
+        @foreach (var departamento in departamentosLejanos)
+        {
+            <li>@departamento</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No se encontraron departamentos lejanos.</p>
+}
 
 @if (nodosIntermedios != null && nodosIntermedios.Any())
 {
@@ -118,19 +147,6 @@
     </div>
 }
 
-<button class="btn btn-primary" @onclick="MostrarDepartamentosCercanosYLejanos">Mostrar Departamentos</button>
-
-@if (listaDepartamentos != null && listaDepartamentos.Any())
-{
-    <h4>Departamentos más cercanos y lejanos de la capital:</h4>
-    <ul>
-        @foreach (var departamento in listaDepartamentos)
-        {
-            <li>@departamento.NombreCabecera - Distancia: @departamento.DistanciaCapital Kms</li>
-        }
-    </ul>
-}
-
 @code {
     int idRutaPartida;
     int idRutaDestino;
@@ -138,13 +154,18 @@
     List<List<Nodo>> nodosIntermedios;
     ListasCuadruplementeEnlazadas listasCuadruplementeEnlazadas;
     DepartamentoDTO departamentoSeleccionado;
-    List<DepartamentoDTO> listaDepartamentos;
+    List<string> departamentosCercanos;
+    List<string> departamentosLejanos;
 
     protected override async Task OnInitializedAsync()
     {
         listaRutas = await rutaService.ListaDestino();
         listasCuadruplementeEnlazadas = new ListasCuadruplementeEnlazadas(rutaService);
         await listasCuadruplementeEnlazadas.CrearNodosDesdeBD();
+
+        var (cercanos, lejanos) = await listasCuadruplementeEnlazadas.ObtenerDepartamentosCercanosYLejanos();
+    departamentosCercanos = cercanos;
+    departamentosLejanos = lejanos;
     }
 
     async Task BuscarRuta()
@@ -262,10 +283,5 @@
                 departamentoSeleccionado = rutaPartidaCompleta.DepartamentoDestino;
             }
         }
-    }
-
-    async Task MostrarDepartamentosCercanosYLejanos()
-    {
-        listaDepartamentos = await listasCuadruplementeEnlazadas.ObtenerDepartamentosCercanosYLejanos();
     }
 }
