@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RedVialGT.Shared
 {
-    [TypeConverter(typeof(RutaDTOTypeConverter))]
+    //[TypeConverter(typeof(RutaDTOTypeConverter))]
     public class RutaDTO
     {
         public int IdRuta { get; set; }

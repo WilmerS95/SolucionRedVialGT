@@ -3,6 +3,8 @@
 
 @using RedVialGT.Shared;
 @using RedVialGT.Client.Services;
+@using Newtonsoft.Json
+
 
 @inject IRutaService rutaService;
 @inject IDepartamentoService departamentoService;
@@ -64,6 +66,8 @@
     RutaDTO ruta = new RutaDTO();
     List<DepartamentoDTO> listaDepartamento = new List<DepartamentoDTO>();
 
+    private string rutaJson = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         if (idRutaEditar != 0)
@@ -71,6 +75,7 @@
             ruta = await rutaService.Buscar(idRutaEditar);
             btnTexto = "Actualizar Ruta";
             tituo = "Editar Ruta";
+            rutaJson = JsonConvert.SerializeObject(ruta);
         }
         else
         {

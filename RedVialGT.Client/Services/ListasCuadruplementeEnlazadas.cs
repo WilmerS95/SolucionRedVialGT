@@ -380,6 +380,5 @@ namespace RedVialGT.Client.Services
             var listaNodos = ObtenerListaNodos();
             return listaNodos.FirstOrDefault(n => n != null && n.ruta != null && n.ruta.IdRuta == ruta.IdRuta);
         }
-
     }
 }

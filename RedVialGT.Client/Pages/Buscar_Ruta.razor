@@ -2,16 +2,19 @@
 
 @using System.Collections.Generic
 @using System.Linq
-@using RedVialGT.Shared;
-@using RedVialGT.Client.Services;
-@using System.Text.Json;
-@using Microsoft.JSInterop;
+@using RedVialGT.Shared
+@using RedVialGT.Client.Services
+@using System.Text.Json
+@using Microsoft.JSInterop
+
+@inject IDepartamentoService departamentoService
+@inject IRutaService rutaService
 
 <h3>Buscar Ruta entre Departamentos</h3>
 
 <div class="input-group mb-3">
     <label class="input-group-text" for="selectRutaPartida">Seleccionar Departamento de Partida</label>
-    <select class="form-select" id="selectRutaPartida" @bind="rutaPartida">
+    <select class="form-select" id="selectRutaPartida" @bind="idRutaPartida">
         <option value="0">Selecciona un departamento...</option>
         @if (listaRutas != null)
         {
@@ -29,7 +32,7 @@
 
 <div class="input-group mb-3">
     <label class="input-group-text" for="selectRutaDestino">Seleccionar Departamento de Destino</label>
-    <select class="form-select" id="selectRutaDestino" @bind="rutaDestino">
+    <select class="form-select" id="selectRutaDestino" @bind="idRutaDestino">
         <option value="0">Selecciona un departamento...</option>
         @if (listaRutas != null)
         {
@@ -47,34 +50,31 @@
 
 <button class="btn btn-primary" @onclick="BuscarRuta">Buscar Ruta</button>
 
-@if (rutasEncontradas != null && rutasEncontradas.Any())
+@if (nodosIntermedios != null && nodosIntermedios.Any())
 {
-    <h4>Rutas Encontradas</h4>
-    @foreach (var ruta in rutasEncontradas)
-    {
-        <ul>
-            @foreach (var nodo in ruta)
-            {
-                <li>@nodo.ruta.NombreRuta</li>
-            }
-        </ul>
-    }
-}
-else
-{
-    <p>No se encontraron rutas entre los departamentos seleccionados.</p>
+    <h4>Ruta más corta</h4>
+    <ul>
+        @foreach (var nodo in nodosIntermedios[0])
+        {
+            <li>@nodo.ruta.NombreRuta</li>
+        }
+    </ul>
+
+    <h4>Ruta más larga</h4>
+    <ul>
+        @foreach (var nodo in nodosIntermedios[1])
+        {
+            <li>@nodo.ruta.NombreRuta</li>
+        }
+    </ul>
 }
 
 @code {
-    RutaDTO rutaPartida;
-    RutaDTO rutaDestino;
-    //int idRutaPartida;
-    //int idRutaDestino;
+    int idRutaPartida;
+    int idRutaDestino;
     List<RutaDTO> listaRutas;
-    List<List<Nodo>> rutasEncontradas;
-
+    List<List<Nodo>> nodosIntermedios;
     ListasCuadruplementeEnlazadas listasCuadruplementeEnlazadas;
-
 
     [Inject]
     public IRutaService RutaService { get; set; }
@@ -83,78 +83,87 @@ else
     {
         listaRutas = await RutaService.ListaDestino();
         listasCuadruplementeEnlazadas = new ListasCuadruplementeEnlazadas(RutaService);
+        await listasCuadruplementeEnlazadas.CrearNodosDesdeBD();
     }
 
     async Task BuscarRuta()
     {
-        if (rutaPartida != null && rutaDestino != null)
+        if (idRutaPartida != 0 && idRutaDestino != 0)
         {
-            // Obtener la información completa de la ruta seleccionada
-            var _rutaPartida = await RutaService.Buscar(rutaPartida.IdRuta);
-            var _rutaDestino = await RutaService.Buscar(rutaDestino.IdRuta);
+            var rutaPartidaCompleta = await RutaService.Buscar(idRutaPartida);
+            var rutaDestinoCompleta = await RutaService.Buscar(idRutaDestino);
 
-            if (rutaPartida != null && rutaDestino != null)
+            if (rutaPartidaCompleta != null && rutaDestinoCompleta != null)
             {
-                // Buscar los nodos correspondientes a las rutas seleccionadas
-                var nodoPartida = listasCuadruplementeEnlazadas.BuscarNodoPorRuta(_rutaPartida);
-                var nodoDestino = listasCuadruplementeEnlazadas.BuscarNodoPorRuta(_rutaDestino);
+                var nodoPartida = listasCuadruplementeEnlazadas.BuscarNodoPorRuta(rutaPartidaCompleta);
+                var nodoDestino = listasCuadruplementeEnlazadas.BuscarNodoPorRuta(rutaDestinoCompleta);
 
                 if (nodoPartida != null && nodoDestino != null)
                 {
-                    // Buscar las rutas entre los nodos encontrados
-                    rutasEncontradas = BuscarRutasEntreNodos(nodoPartida, nodoDestino);
+                    nodosIntermedios = BuscarNodosIntermediosEntreRutas(nodoPartida, nodoDestino);
                 }
                 else
                 {
-                    rutasEncontradas = null;
+                    nodosIntermedios = null;
                 }
             }
         }
     }
 
-    List<List<Nodo>> BuscarRutasEntreNodos(Nodo nodoPartida, Nodo nodoDestino)
+    List<List<Nodo>> BuscarNodosIntermediosEntreRutas(Nodo nodoPartida, Nodo nodoDestino)
     {
-        var rutas = new List<List<Nodo>>();
+        var nodosIntermediosCorta = new List<Nodo>();
+        var nodosIntermediosLarga = new List<Nodo>();
         var rutaActual = new List<Nodo>();
 
-        // Iniciar la búsqueda recursiva
-        BuscarRutaDFS(nodoPartida, nodoDestino, rutaActual, rutas);
+        BuscarRutaDFS(nodoPartida, nodoDestino, rutaActual, nodosIntermediosCorta, nodosIntermediosLarga);
 
-        return rutas;
+        return new List<List<Nodo>> { nodosIntermediosCorta, nodosIntermediosLarga };
     }
 
-    void BuscarRutaDFS(Nodo nodoActual, Nodo nodoDestino, List<Nodo> rutaActual, List<List<Nodo>> rutas)
+    void BuscarRutaDFS(Nodo nodoActual, Nodo nodoDestino, List<Nodo> rutaActual, List<Nodo> nodosIntermediosCorta, List<Nodo> nodosIntermediosLarga)
     {
-        // Agregar el nodo actual a la ruta actual
         rutaActual.Add(nodoActual);
 
-        // Si el nodo actual es el nodo de destino, agregar la ruta actual a la lista de rutas
         if (nodoActual == nodoDestino)
         {
-            rutas.Add(new List<Nodo>(rutaActual));
+            if (nodosIntermediosCorta.Count == 0 || rutaActual.Count < nodosIntermediosCorta.Count)
+            {
+                nodosIntermediosCorta.Clear();
+                nodosIntermediosCorta.AddRange(rutaActual);
+            }
+            if (nodosIntermediosLarga.Count == 0 || rutaActual.Count > nodosIntermediosLarga.Count)
+            {
+                nodosIntermediosLarga.Clear();
+                nodosIntermediosLarga.AddRange(rutaActual);
+            }
         }
         else
         {
-            // Explorar las ligas del nodo actual
             if (nodoActual.ligaNorte != null && !rutaActual.Contains(nodoActual.ligaNorte))
             {
-                BuscarRutaDFS(nodoActual.ligaNorte, nodoDestino, rutaActual, rutas);
+                BuscarRutaDFS(nodoActual.ligaNorte, nodoDestino, rutaActual, nodosIntermediosCorta, nodosIntermediosLarga);
             }
             if (nodoActual.ligaSur != null && !rutaActual.Contains(nodoActual.ligaSur))
             {
-                BuscarRutaDFS(nodoActual.ligaSur, nodoDestino, rutaActual, rutas);
+                BuscarRutaDFS(nodoActual.ligaSur, nodoDestino, rutaActual, nodosIntermediosCorta, nodosIntermediosLarga);
             }
             if (nodoActual.ligaEste != null && !rutaActual.Contains(nodoActual.ligaEste))
             {
-                BuscarRutaDFS(nodoActual.ligaEste, nodoDestino, rutaActual, rutas);
+                BuscarRutaDFS(nodoActual.ligaEste, nodoDestino, rutaActual, nodosIntermediosCorta, nodosIntermediosLarga);
             }
             if (nodoActual.ligaOeste != null && !rutaActual.Contains(nodoActual.ligaOeste))
             {
-                BuscarRutaDFS(nodoActual.ligaOeste, nodoDestino, rutaActual, rutas);
+                BuscarRutaDFS(nodoActual.ligaOeste, nodoDestino, rutaActual, nodosIntermediosCorta, nodosIntermediosLarga);
             }
         }
 
-        // Eliminar el nodo actual de la ruta actual para retroceder
         rutaActual.Remove(nodoActual);
+    }
+
+    public class NodoConDistancia
+    {
+        public Nodo nodo { get; set; }
+        public int distanciaTotalKm { get; set; }
     }
 }
