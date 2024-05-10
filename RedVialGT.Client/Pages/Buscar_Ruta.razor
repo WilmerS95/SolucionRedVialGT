@@ -16,6 +16,7 @@
 {
     <tr>
         <td colspan="12" align="center">
+            <p>Cargando...</p>
             <img style="width:50px; display:block; margin:auto;" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
         </td>
     </tr>
@@ -156,11 +157,13 @@ else
     <div class="horizontal-list">
         @foreach (var nodo in nodosIntermedios[0])
         {
-            <span class="list-item">*</span>
+            @* <span class="list-item">*</span> *@
+            <span class="list-item"> | </span>
             <span class="list-item">@nodo.ruta.NombreRuta</span>
+            <span class="list-item"> | </span>
             @if (nodo != nodosIntermedios[0].Last())
             {
-                <span class="separator">   =>   </span>
+                <span class="separator">   (*)===>   </span>
             }
         }
     </div>
@@ -171,15 +174,22 @@ else
     <div class="horizontal-list">
         @foreach (var nodo in nodosIntermedios[1])
         {
-            <span class="list-item">*</span>
+            @* <span class="list-item">*</span> *@
+            <span class="list-item"> | </span>
             <span class="list-item">@nodo.ruta.NombreRuta</span>
+            <span class="list-item"> | </span>
             @if (nodo != nodosIntermedios[1].Last())
             {
-                <span class="separator">   =>   </span>
+                <span class="separator">   (*)===>   </span>
             }
         }
     </div>
     <br />
+    <tr>
+        <td colspan="12" align="center">
+            <img style="width:50px; display:block; margin:auto;" src="~/rutasNodos.png" />
+        </td>
+    </tr>
     @* <img src="~/rutasNodos.png" alt="Imagen de la interconexion de los nodos"> *@
     <br />
     <button class="btn btn-secondary" @onclick="OcultarRutas">Ocultar Rutas</button>
