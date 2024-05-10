@@ -118,6 +118,19 @@
     </div>
 }
 
+<button class="btn btn-primary" @onclick="MostrarDepartamentosCercanosYLejanos">Mostrar Departamentos</button>
+
+@if (listaDepartamentos != null && listaDepartamentos.Any())
+{
+    <h4>Departamentos más cercanos y lejanos de la capital:</h4>
+    <ul>
+        @foreach (var departamento in listaDepartamentos)
+        {
+            <li>@departamento.NombreCabecera - Distancia: @departamento.DistanciaCapital Kms</li>
+        }
+    </ul>
+}
+
 @code {
     int idRutaPartida;
     int idRutaDestino;
@@ -125,6 +138,7 @@
     List<List<Nodo>> nodosIntermedios;
     ListasCuadruplementeEnlazadas listasCuadruplementeEnlazadas;
     DepartamentoDTO departamentoSeleccionado;
+    List<DepartamentoDTO> listaDepartamentos;
 
     protected override async Task OnInitializedAsync()
     {
@@ -248,5 +262,10 @@
                 departamentoSeleccionado = rutaPartidaCompleta.DepartamentoDestino;
             }
         }
+    }
+
+    async Task MostrarDepartamentosCercanosYLejanos()
+    {
+        listaDepartamentos = await listasCuadruplementeEnlazadas.ObtenerDepartamentosCercanosYLejanos();
     }
 }

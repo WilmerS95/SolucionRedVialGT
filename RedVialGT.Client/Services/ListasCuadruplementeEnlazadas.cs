@@ -320,7 +320,8 @@ namespace RedVialGT.Client.Services
             listaNodos.Add(nodoJalapa);
             listaNodos.Add(nodoJutiapa);
 
-            return listaNodos.Where(n => n != null).ToList();
+            //return listaNodos.Where(n => n != null).ToList();
+            return listaNodos.Where(n => n != null).Cast<Nodo>().ToList();
         }
 
         public List<Nodo> RecorrerListaEntreDepartamentos(RutaDTO rutaPartida, RutaDTO rutaDestino)
@@ -379,6 +380,38 @@ namespace RedVialGT.Client.Services
         {
             var listaNodos = ObtenerListaNodos();
             return listaNodos.FirstOrDefault(n => n != null && n.ruta != null && n.ruta.IdRuta == ruta.IdRuta);
+        }
+
+
+        public async Task<List<DepartamentoDTO>> ObtenerDepartamentosCercanosYLejanos()
+        {
+            var listaNodos = ObtenerListaNodos();
+            var listaDepartamentos = new List<DepartamentoDTO>();
+
+            // Calcular la distancia desde la capital a cada departamento y agregarla a la lista
+            foreach (var nodo in listaNodos)
+            {
+                if (nodo != null && nodo.ruta != null && nodo.ruta.DepartamentoDestino.DistanciaCapital > 0)
+                {
+                    listaDepartamentos.Add(new DepartamentoDTO
+                    {
+                        NombreCabecera = nodo.ruta.DepartamentoDestino.NombreCabecera,
+                        DistanciaCapital = nodo.ruta.DepartamentoDestino.DistanciaCapital,
+                    });
+                }
+            }
+
+            // Ordenar la lista por distancia ascendente
+            listaDepartamentos = listaDepartamentos.OrderBy(d => d.DistanciaCapital).ToList();
+
+            // Tomar los 10 departamentos más cercanos y los 10 más lejanos
+            var departamentosCercanos = listaDepartamentos.Take(10).ToList();
+            var departamentosLejanos = listaDepartamentos.TakeLast(10).ToList();
+
+            // Concatenar los resultados
+            var resultado = departamentosCercanos.Concat(departamentosLejanos).ToList();
+
+            return resultado;
         }
     }
 }
