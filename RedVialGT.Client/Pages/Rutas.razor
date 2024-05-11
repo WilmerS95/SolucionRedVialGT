@@ -11,7 +11,7 @@
 
 <h1>Rutas</h1>
 
-<a class="btn btn-success btn-small mb-3" href="ruta">Nueva Ruta</a>
+<a class="btn btn-outline-success btn-small mb-3" href="ruta">Nueva Ruta</a>
 
 <table class="table">
     <thead>
@@ -55,10 +55,10 @@
                         @item.DistanciaDepartamentos
                     </td>
                     <td style="text-align: center;">
-                        <a class="btn btn-primary" href="ruta/@item.IdRuta">
+                        <a class="btn btn-outline-primary" href="ruta/@item.IdRuta">
                             Editar
                         </a>
-                        <button type="button" class="btn btn-danger" @onclick="(()=> Eliminar(item.IdRuta))">
+                        <button type="button" class="btn btn-outline-danger" @onclick="(()=> Eliminar(item.IdRuta))">
                             Eliminar
                         </button>
                     </td>

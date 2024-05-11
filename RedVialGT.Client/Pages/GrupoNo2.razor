@@ -1,7 +1,6 @@
 ﻿@page "/grupo"
 
 
-<body class="background-image">
 <h3>Grupo #2</h3>
 <table class="table">
     <thead class="table-light">
@@ -53,7 +52,20 @@
             </tbody>
 </table>
 
-<NavLink class="btn btn-primary" href="/buscar-ruta">Iniciar</NavLink>
+@* <NavLink class="btn btn-primary" href="/buscar-ruta">Iniciar</NavLink> *@
 @* <NavLink class="btn btn-warning" href="/grupo">Volver</NavLink> *@
 
-</body>
+@*     <NavLink class="btn btn-primary" href="/buscar-ruta">Iniciar</NavLink> *@
+    @* <NavLink class="btn" type="button" href="/buscar-ruta">
+        <strong>Iniciar</strong>
+        <div id="container-stars">
+            <div id="stars"></div>
+        </div>
+
+        <div id="glow">
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>
+    </NavLink> *@
+
+<NavLink class="btn btn-outline-dark" href="/buscar-ruta"><span>Iniciar</span></NavLink>
