@@ -60,9 +60,9 @@ else
         <button class="btn btn-secondary" @onclick="MostrarDatosDepartamentoDestino">Mostrar Datos</button>
     </div>
     <div>
-        <button class="btn btn-outline-dark" @onclick="BuscarRuta"><span>Buscar Ruta</span></button>
-        <button class="btn btn-outline-dark" @onclick="MostrarListas"><span>Mostrar Deptos Cercanos/Lejanos</span></button>
-        <NavLink class="btn btn-outline-warning" href="/grupo">Volver</NavLink>
+        <button class="btn btn-outline-dark" @onclick="BuscarRuta"><span><i class="bi bi-search"></i> Buscar Ruta</span></button>
+        <button class="btn btn-outline-dark" @onclick="MostrarListas"><span><i class="bi bi-award-fill"></i> Mostrar Deptos Cercanos/Lejanos</span></button>
+        <NavLink class="btn btn-outline-warning" href="/grupo"><i class="bi bi-backspace"></i> Volver</NavLink>
     </div>
     
 }
@@ -110,7 +110,7 @@ else
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-secondary" @onclick="OcultarDatosDepartamento">Ocultar</button>
+        <button class="btn btn-outline-secondary" @onclick="OcultarDatosDepartamento"><i class="bi bi-arrows-collapse"></i> Ocultar</button>
     }
 </div>
 
@@ -193,7 +193,7 @@ else
     </tr>
     @* <img src="~/rutasNodos.png" alt="Imagen de la interconexion de los nodos"> *@
     <br />
-    <button class="btn btn-secondary" @onclick="OcultarRutas">Ocultar Rutas</button>
+    <button class="btn btn-outline-secondary" @onclick="OcultarRutas"><i class="bi bi-arrows-collapse"></i> Ocultar Rutas</button>
 }
 
 @if (mostrarListas)
@@ -244,7 +244,7 @@ else
                 </div>
             </div>
         </div>
-        <button class="btn btn-secondary" @onclick="CerrarModal">Ocultar</button>
+        <button class="btn btn-outline-secondary" @onclick="CerrarModal"><i class="bi bi-arrows-collapse"></i> Ocultar</button>
     </Modal>
 }
 
