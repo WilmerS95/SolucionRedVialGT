@@ -69,7 +69,7 @@ namespace RedVialGT.Client.Services
             nodoSacatepequez = new Nodo();
         }
 
-        public async Task CrearNodosDesdeBD()
+        public async Task CrearNodosDesdeBD() //METODO PARA CREAR NODOS
         {
             // Consultar la información de la base de datos para cada nodo
             nodoGuatemala.ruta = await ObtenerRutaDesdeBD(new RutaDTO { IdRuta = 55 });     //Guatemala - Guatemala
@@ -113,12 +113,12 @@ namespace RedVialGT.Client.Services
         //    return new Nodo(ruta);
         //}
 
-        private async Task<RutaDTO> ObtenerRutaDesdeBD(RutaDTO ruta)
+        private async Task<RutaDTO> ObtenerRutaDesdeBD(RutaDTO ruta) //METODO PARA OBTENER RUTAS DESDE LA DB
         {
             return await _rutaService.Buscar(ruta.IdRuta);
         }
 
-        public async Task ConectarRedVial()
+        public async Task ConectarRedVial() //METODO PARA CONECTAR LA REDVIAL
         {
             //01 Guatemala
             if (nodoGuatemala != null)
@@ -290,7 +290,7 @@ namespace RedVialGT.Client.Services
                 nodoJutiapa.ligaOeste = nodoSantaRosa;
             }
         }
-        public List<Nodo> ObtenerListaNodos()
+        public List<Nodo> ObtenerListaNodos() // METODO PARA RETORNAR UNA LISTA CON TODOS LOS NODOS CREADOS
         {
             var listaNodos = new List<Nodo?>();
             // Agregar todos los nodos a la lista
@@ -321,7 +321,7 @@ namespace RedVialGT.Client.Services
             return listaNodos.Where(n => n != null).Cast<Nodo>().ToList();
         }
 
-        public List<Nodo> RecorrerListaEntreDepartamentos(RutaDTO rutaPartida, RutaDTO rutaDestino)
+        public List<Nodo> RecorrerListaEntreDepartamentos(RutaDTO rutaPartida, RutaDTO rutaDestino) //METODO PARA RECORRER LA LISTA
         {
             var nodoPartida = BuscarNodoPorRuta(rutaPartida);
             var nodoDestino = BuscarNodoPorRuta(rutaDestino);
